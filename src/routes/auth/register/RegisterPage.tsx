@@ -7,11 +7,11 @@ const Register = () => {
   const { mutate, status, error } = useRegister();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "super-user22",
-    email: "nitinsirsath22@gmail.com",
-    password: "12345678",
-    firstName: "Nitin22",
-    lastName: "Sirsath",
+    username: "",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
   });
 
   const handleRegister = () => {
@@ -21,7 +21,7 @@ const Register = () => {
   return (
     <AuthCard
       title="Create Your Account"
-      subtitle="Get started with Squad Sync."
+      subtitle="Get started with Squad Sync"
       buttonText="Register"
       onSubmit={handleRegister}
       isLoading={status === "pending"}

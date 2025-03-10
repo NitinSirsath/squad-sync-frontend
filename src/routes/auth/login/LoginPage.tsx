@@ -6,8 +6,8 @@ import AuthCard from "../components/AuthCard";
 const Login = () => {
   const { mutate, status, error } = useLogin();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("nitinsirsath22@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     mutate({ email, password }, { onSuccess: () => navigate("/dashboard") });
