@@ -10,7 +10,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    mutate({ email, password }, { onSuccess: () => navigate("/dashboard") });
+    mutate(
+      { email, password },
+      { onSuccess: () => navigate("/create-organization") }
+    );
   };
 
   return (
