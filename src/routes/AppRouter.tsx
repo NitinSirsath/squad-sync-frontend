@@ -26,7 +26,7 @@ const AppRouter = () => {
     createdAt: "2025-03-10T11:01:10.195Z",
     updatedAt: "2025-03-10T11:01:48.012Z",
     __v: 0,
-    activeOrg: "s", // Testing case where activeOrg is empty
+    activeOrg: "", // Testing case where activeOrg is empty
   };
 
   return (
