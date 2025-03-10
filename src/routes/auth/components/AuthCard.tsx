@@ -44,8 +44,8 @@ const AuthCard = ({
       <div className="w-full max-w-md p-6 sm:p-8 mt-5 bg-white dark:bg-gray-800 rounded-lg ">
         {/* Header Section */}
         <CardHeader className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Squad Sync
+          <h1 className="text-xl font-bold text-blue-900 dark:text-white tracking-tight">
+            SQUAD SYNC
           </h1>
           <h1 className="text-2xl sm:text-3xl mt-2 sm:mt-3 font-semibold text-gray-800 dark:text-gray-200 leading-tight">
             {title}

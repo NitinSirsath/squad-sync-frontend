@@ -19,7 +19,7 @@ const Login = () => {
   return (
     <AuthCard
       title="Sign in to Squad Sync"
-      subtitle="Use your work email to continue."
+      subtitle="Use your work email to continue"
       buttonText="Sign In"
       onSubmit={handleLogin}
       isLoading={status === "pending"}
