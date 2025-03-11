@@ -5,14 +5,21 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   useCreateOrganization,
+  useOrganizationSelection,
   useUserOrganizations,
 } from "./hooks/useOrganization.query";
 import { OrganizationType } from "@/services/stores/organization/organizationStore";
+import { useNavigate } from "react-router-dom";
+import { useUserInfo } from "@/hooks/auth/useAuth";
 
 const OrganizationPage = () => {
+  const navigate = useNavigate();
   // Fetch organizations
   const { data: organizations, isLoading } = useUserOrganizations();
   const createOrgMutation = useCreateOrganization();
+  const { isPending: loadingSelection, mutate: mutateSelection } =
+    useOrganizationSelection();
+  const { refetch: refetchUserInfo } = useUserInfo();
 
   const [formData, setFormData] = useState({
     organizationName: "",
@@ -23,6 +30,17 @@ const OrganizationPage = () => {
     createOrgMutation.mutate(formData, {
       onSuccess: () => {
         setFormData({ organizationName: "", industry: "" });
+        navigate("/");
+      },
+    });
+  };
+
+  const handleSelection = (org: string) => {
+    // org
+    mutateSelection(org, {
+      onSuccess: async () => {
+        await refetchUserInfo();
+        navigate("/");
       },
     });
   };
@@ -55,11 +73,15 @@ const OrganizationPage = () => {
               <div className="space-y-3 mt-3">
                 {organizations.map((org: OrganizationType) => (
                   <Button
+                    onClick={() => handleSelection(org.orgId._id)}
                     key={org.orgId._id}
+                    disabled={loadingSelection}
                     variant="outline"
                     className="w-[280px] sm:w-[350px] flex items-center justify-between py-2 sm:py-3"
                   >
-                    <span>{org.orgId.name}</span>
+                    <span>
+                      {loadingSelection ? "Selecting..." : org.orgId.name}
+                    </span>
                     <span className="text-xs text-gray-500">{org.role}</span>
                   </Button>
                 ))}

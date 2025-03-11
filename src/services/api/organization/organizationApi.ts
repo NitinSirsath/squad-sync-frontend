@@ -14,3 +14,11 @@ export const createOrganization = async (orgData: {
   const response = await axiosInstance.post("/organization/create", orgData);
   return response.data;
 };
+
+export const organizationSelction = async (orgID: string) => {
+  const response = await axiosInstance.post(
+    "/organization/switch-organization",
+    { orgId: orgID }
+  );
+  return response.data;
+};
