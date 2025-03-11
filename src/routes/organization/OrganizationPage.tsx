@@ -28,8 +28,10 @@ const OrganizationPage = () => {
 
   const handleCreateOrganization = () => {
     createOrgMutation.mutate(formData, {
-      onSuccess: () => {
+      onSuccess: async (response) => {
         setFormData({ organizationName: "", industry: "" });
+        handleSelection(response.organization._id);
+        await refetchUserInfo();
         navigate("/");
       },
     });

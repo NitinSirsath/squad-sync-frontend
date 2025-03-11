@@ -7,12 +7,14 @@ import NotFoundPage from "./notFound/NotFoundPage";
 import OrganizationPage from "./organization/OrganizationPage";
 import ProtectedRoutes from "./middleware/ProtectedRoutes";
 import { useUserStore } from "@/services/stores/user/userStore";
+import SonnerToast from "@/components/custom/SonnerToast";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
 
   return (
     <div>
+      <SonnerToast />
       <Routes>
         {/* Public Routes (accessible only when logged out) */}
         <Route element={<PublicRoutes />}>
