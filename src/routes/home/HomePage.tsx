@@ -17,7 +17,7 @@ const HomePage = () => {
         onClick={handleLogout}
         disabled={status === "pending"}
         className="mt-4"
-        isLoading={true}
+        // isLoading={true}
       >
         {status === "pending" ? "Logging out..." : "Logout"}
       </Button>
