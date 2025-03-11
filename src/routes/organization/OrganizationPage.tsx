@@ -28,7 +28,8 @@ const OrganizationPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center px-4 sm:px-6">
+    <div className="flex flex-col justify-between min-h-screen items-center px-4 sm:px-6">
+      {/* Main Card Section */}
       <div className="w-full max-w-md p-6 sm:p-8 mt-5 bg-white dark:bg-gray-800 rounded-lg">
         {/* Header */}
         <CardHeader className="text-center">
@@ -105,6 +106,24 @@ const OrganizationPage = () => {
           </Button>
         </CardContent>
       </div>
+
+      {/* Footer Section */}
+      <footer className="text-center w-full max-w-md py-4 mt-auto text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="/privacy" className="hover:underline">
+            Privacy & Terms
+          </a>
+          <a href="/contact" className="hover:underline">
+            Contact Us
+          </a>
+          <select className="bg-transparent border border-gray-400 text-gray-600 dark:text-gray-300 dark:border-gray-600 px-2 py-1 rounded">
+            <option>English</option>
+            <option>हिंदी</option>
+            <option>Français</option>
+            <option>Deutsch</option>
+          </select>
+        </div>
+      </footer>
     </div>
   );
 };
