@@ -11,7 +11,9 @@ export const loginUser = async (email: string, password: string) => {
 export const registerUser = async (userData: {
   email: string;
   password: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  username: string;
 }) => {
   const response = await axiosInstance.post("/auth/register", userData);
   return response.data; // { token, user }

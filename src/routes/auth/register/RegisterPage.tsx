@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegister } from "@/hooks/auth/useAuth";
 import AuthCard from "../components/AuthCard";
+import { UserRegisterFormType } from "@/types/user.types";
 
 const Register = () => {
   const { mutate, status, error } = useRegister();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserRegisterFormType>({
     username: "",
     email: "",
     password: "",

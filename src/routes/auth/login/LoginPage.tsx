@@ -12,7 +12,11 @@ const Login = () => {
   const handleLogin = () => {
     mutate(
       { email, password },
-      { onSuccess: () => navigate("/create-organization") }
+      {
+        onSuccess: () => {
+          navigate("/create-organization");
+        },
+      }
     );
   };
 

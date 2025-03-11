@@ -17,3 +17,11 @@ export type UserObjectType = {
   __v: number;
   activeOrg: string;
 };
+
+export type UserRegisterFormType = {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+};

@@ -3,27 +3,51 @@ import {
   logoutUser,
   registerUser,
 } from "@/services/api/auth/authApi";
+import { getUserInfo } from "@/services/api/user/userInfoApi";
 import { useAuthStore } from "@/services/stores/auth/authStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useUserStore } from "@/services/stores/user/userStore";
+import { UserRegisterFormType } from "@/types/user.types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Login Hook
 export const useLogin = () => {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
+  const { refetch } = useUserInfo(); // ✅ Get refetch function
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       loginUser(email, password),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setLoggedIn(data.token);
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+
+      // ✅ Trigger user-info fetch after login success
+      await refetch();
+
+      // ✅ Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ["user-info"] });
     },
+  });
+};
+
+export const useUserInfo = () => {
+  const { setUserInfo } = useUserStore();
+
+  return useQuery({
+    queryKey: ["user-info"],
+    queryFn: async () => {
+      const userData = await getUserInfo();
+      setUserInfo(userData.userObject); // Store in Zustand
+      return userData;
+    },
+    enabled: false, // ✅ Prevent auto-fetch on mount
+    retry: 2, // ✅ Retry twice if API fails
   });
 };
 
 export const useRegister = () => {
   return useMutation({
-    mutationFn: (userData: any) => registerUser(userData),
+    mutationFn: (userData: UserRegisterFormType) => registerUser(userData),
     onSuccess: (data) => {
       localStorage.setItem("token", data.token);
     },
