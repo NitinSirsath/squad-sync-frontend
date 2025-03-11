@@ -54,7 +54,7 @@ const AuthCard = ({
               {subtitle}
             </p>
             <Button
-              variant="ghost"
+              variant="outline"
               className="w-full flex items-center justify-center gap-2 py-2 sm:py-3"
             >
               <FcGoogle size={18} /> Continue with Google
