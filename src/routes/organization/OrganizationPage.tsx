@@ -3,29 +3,16 @@ import { CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import {
+  useCreateOrganization,
+  useUserOrganizations,
+} from "./hooks/useOrganization.query";
+import { OrganizationType } from "@/services/stores/organization/organizationStore";
 
 const OrganizationPage = () => {
-  // Sample organization data (Replace with API data)
-  const organizations = [
-    {
-      orgId: {
-        _id: "67cec69b690e37bb425d9e2a",
-        name: "Jarves INC",
-        industry: "SMR",
-      },
-      role: "admin",
-      _id: "67cec69c690e37bb425d9e2d",
-    },
-    {
-      orgId: {
-        _id: "67cec69b690e37bb425d9e2b",
-        name: "TechSync",
-        industry: "Software",
-      },
-      role: "member",
-      _id: "67cec69c690e37bb425d9e2e",
-    },
-  ];
+  // Fetch organizations
+  const { data: organizations, isLoading } = useUserOrganizations();
+  const createOrgMutation = useCreateOrganization();
 
   const [formData, setFormData] = useState({
     organizationName: "",
@@ -33,13 +20,16 @@ const OrganizationPage = () => {
   });
 
   const handleCreateOrganization = () => {
-    console.log("Creating Organization:", formData);
-    // Add API call here
+    createOrgMutation.mutate(formData, {
+      onSuccess: () => {
+        setFormData({ organizationName: "", industry: "" });
+      },
+    });
   };
 
   return (
-    <div className="flex items-center justify-center  px-4 sm:px-6">
-      <div className="w-full max-w-md p-6 sm:p-8 mt-5 bg-white dark:bg-gray-800 rounded-lg ">
+    <div className="flex items-center justify-center px-4 sm:px-6">
+      <div className="w-full max-w-md p-6 sm:p-8 mt-5 bg-white dark:bg-gray-800 rounded-lg">
         {/* Header */}
         <CardHeader className="text-center">
           <h1 className="text-xl font-bold text-blue-900 dark:text-white tracking-tight">
@@ -52,13 +42,17 @@ const OrganizationPage = () => {
 
         <CardContent className="space-y-4 sm:space-y-5 mt-5">
           {/* Organization List */}
-          {organizations.length > 0 && (
+          {isLoading ? (
+            <p className="text-center text-gray-600 dark:text-gray-400">
+              Loading organizations...
+            </p>
+          ) : organizations && organizations.length > 0 ? (
             <div>
               <h2 className="text-lg text-center font-semibold text-gray-700 dark:text-gray-300">
                 Existing Organizations
               </h2>
               <div className="space-y-3 mt-3">
-                {organizations.map((org) => (
+                {organizations.map((org: OrganizationType) => (
                   <Button
                     key={org.orgId._id}
                     variant="outline"
@@ -76,9 +70,7 @@ const OrganizationPage = () => {
                 </span>
               </div>
             </div>
-          )}
-
-          {/* OR Separator */}
+          ) : null}
 
           {/* Create Organization Section */}
           <h2 className="text-lg text-center font-semibold text-gray-700 dark:text-gray-300">
@@ -104,9 +96,12 @@ const OrganizationPage = () => {
           />
           <Button
             onClick={handleCreateOrganization}
+            disabled={createOrgMutation.isPending}
             className="w-[280px] sm:w-[350px] py-2 sm:py-3 text-sm sm:text-md font-semibold tracking-wide"
           >
-            Create Organization
+            {createOrgMutation.isPending
+              ? "Creating..."
+              : "Create Organization"}
           </Button>
         </CardContent>
       </div>
