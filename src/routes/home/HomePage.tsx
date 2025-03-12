@@ -9,9 +9,9 @@ const HomePage = () => {
   const handleLogout = () => {
     logout(undefined, { onSuccess: () => navigate("/login") }); // Redirect after logout
   };
-
+  //   flex flex-col items-center justify-center min-h-screen
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="">
       <h1 className="text-2xl font-bold">Welcome to HomePage</h1>
       <Button
         onClick={handleLogout}

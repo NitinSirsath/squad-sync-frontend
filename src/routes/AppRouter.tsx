@@ -8,6 +8,7 @@ import OrganizationPage from "./organization/OrganizationPage";
 import ProtectedRoutes from "./middleware/ProtectedRoutes";
 import { useUserStore } from "@/services/stores/user/userStore";
 import SonnerToast from "@/components/custom/SonnerToast";
+import Layout from "@/layout/AppLayout";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -16,19 +17,23 @@ const AppRouter = () => {
     <div>
       <SonnerToast />
       <Routes>
-        {/* Public Routes (accessible only when logged out) */}
+        {/* Public Routes (Only accessible when logged out) */}
         <Route element={<PublicRoutes />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
 
-        {/* Protected Routes (accessible only when logged in) */}
+        {/* Protected Routes with Global Layout */}
         <Route element={<ProtectedRoutes userInfo={userInfo} />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/create-organization" element={<OrganizationPage />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+          </Route>
         </Route>
 
-        {/* Fallback Route (optional) */}
+        <Route element={<ProtectedRoutes userInfo={userInfo} />}>
+          <Route path="/create-organization" element={<OrganizationPage />} />
+        </Route>
+        {/* Fallback Route */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
@@ -36,14 +41,13 @@ const AppRouter = () => {
 };
 
 // ---- Public Route Component ----
-
 const PublicRoutes = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { userInfo } = useUserStore();
 
   // ✅ Prevent redirecting until userInfo is loaded
   if (isLoggedIn && !userInfo) {
-    return null; // Prevent unnecessary redirects while Zustand loads user data
+    return null; // Avoid unnecessary redirects while Zustand loads user data
   }
 
   return isLoggedIn ? (
