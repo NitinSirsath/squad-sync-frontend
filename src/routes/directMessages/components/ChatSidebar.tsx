@@ -10,7 +10,7 @@ const ChatSidebar = () => {
   const { data: chatList, isLoading } = useChatList();
 
   return (
-    <aside className="w-80 bg-gray-900 text-white flex flex-col p-4 border-r border-gray-800">
+    <aside className="w-80 flex flex-col p-4 border-r border-gray-800">
       <h2 className="text-lg font-semibold mb-4">Messages</h2>
 
       {/* Loading Skeleton */}
@@ -29,7 +29,9 @@ const ChatSidebar = () => {
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer",
-                  isActive ? "bg-gray-800 text-white" : "hover:bg-gray-800/50"
+                  isActive
+                    ? "bg-gray-900 text-white"
+                    : "hover:bg-gray-900/50 border-2 dark:border-gray-900 dark:border"
                 )
               }
             >
