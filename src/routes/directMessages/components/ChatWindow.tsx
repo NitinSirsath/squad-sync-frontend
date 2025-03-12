@@ -7,9 +7,11 @@ import { useSocket } from "@/context/SocketContext";
 import { Message } from "../types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/services/stores/user/userStore";
 
 const ChatWindow = () => {
   const { userId } = useParams();
+  const { userInfo } = useUserStore();
   const { socket, sendMessage } = useSocket();
   const { data: messages, isLoading } = useDirectMessages(userId);
   const [newMessage, setNewMessage] = useState("");
@@ -33,26 +35,49 @@ const ChatWindow = () => {
     if (socket && userId) {
       socket.on("newMessage", (message: Message) => {
         console.log("📩 New Message Received:", message);
-        setLocalMessages((prev) => [...prev, message]); // ✅ Append new messages
+
+        // ✅ Ignore messages from the current sender (prevent duplicates)
+        if (message.senderId !== userInfo?._id) {
+          setLocalMessages((prev) => [...prev, message]);
+        }
       });
     }
 
     return () => {
       socket?.off("newMessage");
     };
-  }, [socket, userId]);
+  }, [socket, userId, userInfo?._id]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !userId) return;
+    if (!newMessage.trim() || !userId || !userInfo?._id) return; // ✅ Ensure senderId exists
 
+    // ✅ Create a temporary message object
+    const tempMessage: Message = {
+      _id: crypto.randomUUID(), // Temporary ID
+      senderId: userInfo._id, // ✅ Safe access
+      senderName: userInfo.firstName || "You",
+      receiverId: userId,
+      receiverName: "Receiver", // You can dynamically fetch receiverName
+      message: newMessage,
+      messageType: "text",
+      fileUrl: null,
+      seen: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    // ✅ Instantly update local state
+    setLocalMessages((prev) => [...prev, tempMessage]);
+
+    // ✅ Send message via WebSocket
     const formData = new FormData();
     formData.append("receiverId", userId);
     formData.append("message", newMessage);
-    formData.append("messageType", "text"); // Default message type
-    formData.append("fileURL", ""); // Set empty if no file
+    formData.append("messageType", "text");
+    formData.append("fileURL", "");
 
-    sendMessage(formData);
-    setNewMessage("");
+    sendMessage(formData); // Send to backend
+
+    setNewMessage(""); // Clear input
   };
 
   return (
