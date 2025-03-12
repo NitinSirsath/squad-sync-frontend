@@ -30,8 +30,8 @@ const ChatSidebar = () => {
                 cn(
                   "flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer",
                   isActive
-                    ? "bg-gray-900 text-white"
-                    : "hover:bg-gray-900/50 border-2 dark:border-gray-900 dark:border"
+                    ? "bg-gray-900 dark:bg-gray-700  text-white"
+                    : "hover:bg-gray-900 border-2 "
                 )
               }
             >
