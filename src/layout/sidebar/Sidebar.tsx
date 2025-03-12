@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import {
   Home,
   Users,
@@ -16,16 +15,23 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
 
 const menuItems = [
-  { icon: Home, label: "Home", tooltip: "Dashboard Overview" },
-  { icon: Users, label: "Teams", tooltip: "Manage Teams & Members" },
+  { icon: Home, label: "Home", path: "/", tooltip: "Dashboard Overview" },
+  {
+    icon: Users,
+    label: "Teams",
+    path: "/teams",
+    tooltip: "Manage Teams & Members",
+  },
   {
     icon: MessageSquare,
     label: "Messages",
+    path: "/messages",
     tooltip: "Chat with colleagues",
     expandableContent: (
-      <div className="p-2 text-sm text-gray-600 dark:text-gray-300">
+      <div className="p-2 text-sm text-gray-700 dark:text-gray-300">
         <p className="font-semibold">Recent Messages</p>
         <Separator className="my-2" />
         <p>📩 John: "Let's meet at 3PM"</p>
@@ -34,70 +40,76 @@ const menuItems = [
       </div>
     ),
   },
-  { icon: Settings, label: "Settings", tooltip: "Configure Preferences" },
+  {
+    icon: Settings,
+    label: "Settings",
+    path: "/settings",
+    tooltip: "Configure Preferences",
+  },
 ];
 
 const Sidebar = () => {
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
-    <aside className="h-screen bg-gray-900 text-gray-100 flex flex-col items-center p-4 w-16 shadow-xl border-r border-gray-700">
+    <aside className="h-screen border bg-gray-900 text-gray-100 flex flex-col items-center p-4 w-20">
       {/* Sidebar Header */}
-
-      {/* Navigation Items */}
-      <nav className="mt-8 flex flex-col space-y-4 w-full">
-        {menuItems.map(({ icon: Icon, label, tooltip, expandableContent }) => (
-          <div
-            key={label}
-            className="relative group"
-            onMouseEnter={() => setExpandedItem(label)}
-            onMouseLeave={() => setExpandedItem(null)}
-          >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "w-full flex items-center justify-center transition-all duration-300 rounded-lg hover:bg-gray-800 hover:shadow-lg"
-                  )}
-                >
-                  <Icon className="size-6 transition-all duration-300 hover:text-blue-400" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{tooltip}</TooltipContent>
-            </Tooltip>
-
-            {/* Expandable Content */}
-            {expandedItem === label && expandableContent && (
-              <Card className="absolute left-16 top-0 w-60 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700 rounded-lg transition-all duration-300 transform scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100">
-                <CardContent>{expandableContent}</CardContent>
-              </Card>
-            )}
-          </div>
-        ))}
-      </nav>
-
-      {/* Add New Button */}
-      <div className="mt-auto w-full">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-full flex items-center justify-center transition-all duration-300 rounded-lg hover:bg-green-600 hover:text-white"
-        >
-          <Plus className="size-6" />
-        </Button>
+      <div className="flex items-center justify-center mb-6">
+        <Plus className="size-6 cursor-pointer hover:scale-110 transition-transform" />
       </div>
 
+      {/* Navigation Items */}
+      <nav className="flex flex-col space-y-2 w-full">
+        {menuItems.map(
+          ({ icon: Icon, label, path, tooltip, expandableContent }) => (
+            <div
+              key={label}
+              className="relative group"
+              onMouseEnter={() => setHoveredItem(label)}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <NavLink to={path}>
+                    {({ isActive }) => (
+                      <Button
+                        variant={isActive ? "default" : "ghost"}
+                        size="icon"
+                        className="w-full flex items-center justify-center"
+                      >
+                        <Icon className="size-5" />
+                      </Button>
+                    )}
+                  </NavLink>
+                </TooltipTrigger>
+                <TooltipContent>{tooltip}</TooltipContent>
+              </Tooltip>
+
+              {/* Hover Information Box */}
+              {hoveredItem === label && expandableContent && (
+                <Card className="absolute left-16 top-0 w-60 bg-white dark:bg-gray-800 shadow-lg z-50">
+                  <CardContent>{expandableContent}</CardContent>
+                </Card>
+              )}
+            </div>
+          )
+        )}
+      </nav>
+
       {/* Logout */}
-      <div className="mt-4 w-full">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-full flex items-center justify-center transition-all duration-300 rounded-lg hover:bg-red-600 hover:text-white"
-        >
-          <LogOut className="size-6" />
-        </Button>
+      <div className="mt-auto w-full">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-full flex items-center justify-center"
+            >
+              <LogOut className="size-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Logout</TooltipContent>
+        </Tooltip>
       </div>
     </aside>
   );

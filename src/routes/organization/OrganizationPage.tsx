@@ -135,10 +135,6 @@ const OrganizationPage = () => {
               onChange={(e) =>
                 setFormData({ ...formData, organizationName: e.target.value })
               }
-              style={{
-                backgroundColor: "var(--input-bg)",
-                color: "var(--input-fg)",
-              }}
             />
             <Input
               type="text"
@@ -147,10 +143,6 @@ const OrganizationPage = () => {
               onChange={(e) =>
                 setFormData({ ...formData, industry: e.target.value })
               }
-              style={{
-                backgroundColor: "var(--input-bg)",
-                color: "var(--input-fg)",
-              }}
             />
             <Button
               className="w-full"
