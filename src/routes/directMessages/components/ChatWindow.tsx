@@ -77,7 +77,7 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Chat Header */}
       <div className="p-4 border-b dark:border-gray-700 flex items-center gap-3">
         <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
