@@ -1,52 +1,65 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useDirectMessages, useSendMessage } from "../hooks/useDirectSms.query";
+import { useDirectMessages } from "../hooks/useDirectSms.query";
+import { useSocket } from "@/context/SocketContext";
 import { Message } from "../types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
-import { queryClient } from "@/services/api/query/queryClient";
 
 const ChatWindow = () => {
   const { userId } = useParams();
+  const { socket, sendMessage } = useSocket();
   const { data: messages, isLoading } = useDirectMessages(userId);
-  const { mutate, isPending: IsPendingSms } = useSendMessage();
-
   const [newMessage, setNewMessage] = useState("");
+  const [localMessages, setLocalMessages] = useState<Message[]>([]); // ❌ Removed initialization from messages
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll to latest message
+  // ✅ Sync localMessages when messages update from API
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages) {
+      setLocalMessages(messages);
+    }
   }, [messages]);
 
+  // ✅ Auto-scroll to latest message
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [localMessages]);
+
+  // ✅ Handle new incoming messages from Socket.IO
+  useEffect(() => {
+    if (socket && userId) {
+      socket.on("newMessage", (message: Message) => {
+        console.log("📩 New Message Received:", message);
+        setLocalMessages((prev) => [...prev, message]); // ✅ Append new messages
+      });
+    }
+
+    return () => {
+      socket?.off("newMessage");
+    };
+  }, [socket, userId]);
+
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
-    console.log("Sending message:", newMessage);
+    if (!newMessage.trim() || !userId) return;
 
     const formData = new FormData();
-    formData.append("receiverId", userId || "");
+    formData.append("receiverId", userId);
     formData.append("message", newMessage);
-    formData.append("messageType", "text");
-    formData.append("fileURL", ""); // Ensure it's a string, not `null`
-    mutate(formData, {
-      onSuccess: async () => {
-        queryClient.invalidateQueries({
-          queryKey: ["direct-messages", userId],
-        });
-      },
-    });
+    formData.append("messageType", "text"); // Default message type
+    formData.append("fileURL", ""); // Set empty if no file
+
+    sendMessage(formData);
     setNewMessage("");
   };
 
   return (
-    <div className="flex flex-col  bg-white dark:bg-gray-900 shadow-lg w-full  h-full">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-white dark:bg-gray-800 shadow-md rounded-lg">
       {/* Header */}
-      <div className="p-4 border-b dark:border-gray-700 flex items-center">
-        <h2 className="text-lg font-semibold flex-1">Chat</h2>
-        <p className="text-sm text-green-400">● Online</p>
+      <div className="p-4 border-b dark:border-gray-700">
+        <h2 className="text-lg font-semibold">Chat</h2>
       </div>
 
       {/* Messages */}
@@ -55,38 +68,29 @@ const ChatWindow = () => {
           <p className="text-center text-gray-600 dark:text-gray-400">
             Loading messages...
           </p>
-        ) : messages?.length ? (
-          messages.map((msg: Message) => (
+        ) : localMessages.length ? (
+          localMessages.map((msg: Message) => (
             <div
               key={msg._id}
               className={cn(
-                " p-3 rounded-lg",
+                "max-w-[75%] p-3 rounded-lg",
                 msg.senderId === userId
                   ? "bg-gray-300 dark:bg-gray-700 self-start"
-                  : "bg-gray-300 dark:bg-gray-700 self-start"
+                  : "bg-blue-500 text-white self-end"
               )}
             >
               <p className="text-sm font-medium">{msg.senderName}</p>
-
-              {/* Text Message */}
-              {msg.messageType === "text" && (
-                <p className="text-sm">{msg.message}</p>
-              )}
-
-              {/* Timestamp & Seen Status */}
+              <p className="text-sm">{msg.message}</p>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {formatDistanceToNow(new Date(msg.createdAt), {
                   addSuffix: true,
                 })}
-                {msg.seen && (
-                  <span className="ml-2 text-green-500">✔ Seen</span>
-                )}
               </div>
             </div>
           ))
         ) : (
           <p className="text-center text-gray-600 dark:text-gray-400">
-            Select user to start chatting
+            No messages yet.
           </p>
         )}
 
@@ -94,26 +98,19 @@ const ChatWindow = () => {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input Field */}
-      {userId && (
-        <div className="p-3 border-t dark:border-gray-700 flex items-center gap-3 bg-gray-100 dark:bg-gray-800">
-          <Input
-            type="text"
-            placeholder="Type a message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            className="flex-1"
-          />
-          <Button
-            disabled={IsPendingSms}
-            onClick={handleSendMessage}
-            size="icon"
-            variant="outline"
-          >
-            <Send className="size-5" />
-          </Button>
-        </div>
-      )}
+      {/* Message Input */}
+      <div className="p-4 border-t dark:border-gray-700 flex items-center gap-3">
+        <Input
+          type="text"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          className="flex-1"
+        />
+        <Button onClick={handleSendMessage} className="px-4">
+          Send
+        </Button>
+      </div>
     </div>
   );
 };

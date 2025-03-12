@@ -1,7 +1,7 @@
-import { axiosInstance } from "@/services/api/axios/axiosConfig";
 import {
   fetchChatList,
   fetchDirectMessages,
+  sendMessage,
 } from "@/services/api/direct-messages/directMessages.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -18,16 +18,10 @@ export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (formData: FormData) => {
-      await axiosInstance.post(
-        "/direct-messages/send-direct-message",
-        formData
-      );
-    },
+    mutationFn: sendMessage, // Uses the API call
     onSuccess: (_, variables) => {
-      const receiverId = variables.get("receiverId") as string;
       queryClient.invalidateQueries({
-        queryKey: ["direct-messages", receiverId],
+        queryKey: ["direct-messages", variables.receiverId],
       });
       queryClient.invalidateQueries({ queryKey: ["chat-list"] });
     },
