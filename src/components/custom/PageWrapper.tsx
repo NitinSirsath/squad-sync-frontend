@@ -5,7 +5,7 @@ interface PageWrapperProps {
   headerHeight?: number; // Default header height
 }
 
-const PageWrapper = ({ children, headerHeight = 100 }: PageWrapperProps) => {
+const PageWrapper = ({ children, headerHeight = 70 }: PageWrapperProps) => {
   return (
     <div
       className="flex w-full"
