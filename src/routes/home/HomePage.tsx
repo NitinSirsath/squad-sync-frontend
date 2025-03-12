@@ -11,7 +11,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex flex-row items-start gap-1 ">
+    <div className="flex flex-col items-start gap-1 ">
       <h1 className="text-2xl font-bold">Welcome to HomePage</h1>
       <Button onClick={handleLogout} disabled={status === "pending"}>
         {status === "pending" ? "Logging out..." : "Logout"}

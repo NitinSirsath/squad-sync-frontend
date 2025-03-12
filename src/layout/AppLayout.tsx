@@ -10,7 +10,7 @@ const Layout = () => {
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col bg-gray-50 dark:bg-gray-800 transition-all">
         <Header />
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto p-1">
           <Outlet />
         </main>
       </div>
