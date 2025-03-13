@@ -1,81 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import { useDirectMessages } from "../hooks/useDirectSms.query";
-import { useSocket } from "@/context/SocketContext";
 import { Message } from "../types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/services/stores/user/userStore";
 import { cn } from "@/lib/utils";
+import useChatWindow from "../hooks/useChatWindow";
 
 const ChatWindow = () => {
-  const { userId } = useParams();
-  const { userInfo } = useUserStore();
-  const { socket, sendMessage } = useSocket();
-  const { data: messages, isLoading } = useDirectMessages(userId);
-  const [newMessage, setNewMessage] = useState("");
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
-
-  // Sync messages when API data updates
-  useEffect(() => {
-    if (messages) {
-      setLocalMessages(messages);
-    }
-  }, [messages]);
-
-  // Auto-scroll to latest message
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [localMessages]);
-
-  // Handle new incoming messages from Socket.IO
-  useEffect(() => {
-    if (socket && userId) {
-      socket.on("newMessage", (message: Message) => {
-        console.log("📩 New Message Received:", message);
-        if (message.senderId !== userInfo?._id) {
-          setLocalMessages((prev) => [...prev, message]);
-        }
-      });
-    }
-
-    return () => {
-      socket?.off("newMessage");
-    };
-  }, [socket, userId, userInfo?._id]);
-
-  const handleSendMessage = async () => {
-    if (!newMessage.trim() || !userId || !userInfo?._id) return;
-
-    // Create a temporary message object
-    const tempMessage: Message = {
-      _id: crypto.randomUUID(),
-      senderId: userInfo._id,
-      senderName: userInfo.firstName || "You",
-      receiverId: userId,
-      receiverName: "Receiver",
-      message: newMessage,
-      messageType: "text",
-      fileUrl: null,
-      seen: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    setLocalMessages((prev) => [...prev, tempMessage]);
-
-    // Send message via WebSocket
-    const formData = new FormData();
-    formData.append("receiverId", userId);
-    formData.append("message", newMessage);
-    formData.append("messageType", "text");
-    formData.append("fileURL", "");
-
-    sendMessage(formData);
-    setNewMessage("");
-  };
-
+  const {
+    userId,
+    isLoading,
+    localMessages,
+    userInfo,
+    chatEndRef,
+    newMessage,
+    handleSendMessage,
+    setNewMessage,
+  } = useChatWindow();
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Chat Header */}
