@@ -22,3 +22,8 @@ export const organizationSelction = async (orgID: string) => {
   );
   return response.data;
 };
+
+export const organizationMembers = async () => {
+  const response = await axiosInstance.get("organization/organization-members");
+  return response.data;
+};

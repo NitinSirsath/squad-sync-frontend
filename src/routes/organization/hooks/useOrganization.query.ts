@@ -3,6 +3,7 @@ import {
   fetchUserOrganizations,
   createOrganization,
   organizationSelction,
+  organizationMembers,
 } from "@/services/api/organization/organizationApi";
 import { useOrganizationStore } from "@/services/stores/organization/organizationStore";
 
@@ -44,5 +45,12 @@ export const useOrganizationSelection = () => {
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["user-info"] });
     },
+  });
+};
+
+export const useOrgMembers = () => {
+  return useQuery({
+    queryKey: ["organization-members"],
+    queryFn: organizationMembers,
   });
 };

@@ -2,8 +2,9 @@ import { useSocket } from "@/context/SocketContext";
 import { useUserStore } from "@/services/stores/user/userStore";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDirectMessages } from "./useDirectSms.query";
+import { useChatList, useDirectMessages } from "./useDirectSms.query";
 import { Message } from "../types/message.types";
+import { queryClient } from "@/services/api/query/queryClient";
 
 const useChatWindow = () => {
   const { userId } = useParams();
@@ -70,6 +71,7 @@ const useChatWindow = () => {
 
     sendMessage(formData);
     setNewMessage("");
+    queryClient.invalidateQueries({ queryKey: ["chat-list"] });
   };
 
   return {

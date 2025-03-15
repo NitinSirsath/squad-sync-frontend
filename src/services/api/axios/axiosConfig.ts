@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/services/stores/auth/authStore";
+import { useToastStore } from "@/services/stores/toast/useToastStore";
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8000/api/"; // Replace with actual API
@@ -29,6 +30,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(error?.response?.data?.message, "axioserror");
+    const { showToast } = useToastStore.getState();
+    showToast(
+      error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        "Something went wrong!",
+      "error"
+    );
     if (error.response?.status === 401) {
       useAuthStore.getState().setLoggedOut(); // Call Zustand logout function
       window.location.href = "/login"; // Redirect to login page
