@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDirectMessages } from "./useDirectSms.query";
 import { Message } from "../types/message.types";
-import { queryClient } from "@/services/api/query/queryClient";
 
 const useChatWindow = () => {
   const { userId } = useParams();
@@ -27,7 +26,7 @@ const useChatWindow = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [localMessages]);
 
-  // Handle new incoming messages from Socket.IO
+  // ✅ Handle new incoming messages from WebSocket
   useEffect(() => {
     if (socket && userId) {
       socket.on("newMessage", (message: Message) => {
@@ -71,7 +70,6 @@ const useChatWindow = () => {
 
     sendMessage(formData);
     setNewMessage("");
-    queryClient.invalidateQueries({ queryKey: ["chat-list"] });
   };
 
   return {

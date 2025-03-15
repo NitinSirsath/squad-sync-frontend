@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useUserStore } from "@/services/stores/user/userStore";
+import { queryClient } from "@/services/api/query/queryClient";
 
 // Create Context
 type SocketContextType = {
@@ -24,10 +25,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (userInfo?._id) {
       const newSocket = io("http://localhost:8000", {
-        reconnection: true, // ✅ Ensures automatic reconnection
-        reconnectionAttempts: 5, // ✅ Retry up to 5 times
-        reconnectionDelay: 2000, // ✅ Wait 2s before retrying
-        transports: ["websocket"], // ✅ Force WebSocket over polling
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 2000,
+        transports: ["websocket"],
       });
 
       // Register user upon connection
@@ -40,12 +41,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         setOnlineUsers(users);
       });
 
+      // ✅ Listen for chat list updates
+      newSocket.on("updateChatList", () => {
+        console.log("🔄 Refreshing chat list...");
+        queryClient.invalidateQueries({ queryKey: ["chat-list"] });
+      });
+
       // Handle socket disconnection
       newSocket.on("disconnect", (reason) => {
         console.warn("❌ Socket disconnected:", reason);
       });
 
-      // Handle socket errors
       newSocket.on("connect_error", (err) => {
         console.error("⚠️ Socket connection error:", err);
       });
@@ -54,7 +60,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
       return () => {
         newSocket.off("updateOnlineUsers");
-        newSocket.disconnect(); // Proper cleanup on unmount
+        newSocket.off("updateChatList");
+        newSocket.disconnect();
       };
     }
   }, [userInfo?._id]);
