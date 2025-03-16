@@ -7,13 +7,19 @@ import { queryClient } from "@/services/api/query/queryClient";
 type SocketContextType = {
   socket: Socket | null;
   onlineUsers: string[];
-  sendMessage: (formData: FormData) => void;
+  sendDirectMessage: (formData: FormData) => void;
+  sendGroupMessage: (groupId: string, message: string) => void;
+  joinGroup: (groupId: string) => void;
+  leaveGroup: (groupId: string) => void;
 };
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   onlineUsers: [],
-  sendMessage: () => {},
+  sendDirectMessage: () => {},
+  sendGroupMessage: () => {},
+  joinGroup: () => {},
+  leaveGroup: () => {},
 });
 
 // Socket Provider
@@ -41,10 +47,26 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         setOnlineUsers(users);
       });
 
-      // ✅ Listen for chat list updates
+      // ✅ Listen for direct chat list updates
       newSocket.on("updateChatList", () => {
         console.log("🔄 Refreshing chat list...");
         queryClient.invalidateQueries({ queryKey: ["chat-list"] });
+      });
+
+      // ✅ Listen for new direct messages
+      newSocket.on("newMessage", (message) => {
+        console.log("📩 New Direct Message:", message);
+        queryClient.invalidateQueries({
+          queryKey: ["direct-messages", message.senderId],
+        });
+      });
+
+      // ✅ Listen for new group messages
+      newSocket.on("newGroupMessage", (message) => {
+        console.log("📩 New Group Message:", message);
+        queryClient.invalidateQueries({
+          queryKey: ["group-messages", message.groupId],
+        });
       });
 
       // Handle socket disconnection
@@ -61,26 +83,24 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       return () => {
         newSocket.off("updateOnlineUsers");
         newSocket.off("updateChatList");
+        newSocket.off("newMessage");
+        newSocket.off("newGroupMessage");
         newSocket.disconnect();
       };
     }
   }, [userInfo?._id]);
 
-  const sendMessage = (formData: FormData) => {
+  // ✅ Send Direct Message
+  const sendDirectMessage = (formData: FormData) => {
     const receiverId = formData.get("receiverId") as string;
     const message = formData.get("message") as string;
 
     if (socket) {
-      console.log("📤 Sending message:", {
+      console.log("📤 Sending Direct Message:", {
         senderId: userInfo?._id,
         receiverId,
         message,
       });
-
-      if (!userInfo?._id || !receiverId) {
-        console.error("❌ Error: Missing senderId or receiverId");
-        return;
-      }
 
       socket.emit("sendMessage", {
         senderId: userInfo?._id,
@@ -100,8 +120,52 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // ✅ Send Group Message
+  const sendGroupMessage = (groupId: string, message: string) => {
+    if (!socket || !userInfo?._id) {
+      console.error("⚠️ No active socket connection or user not authenticated");
+      return;
+    }
+
+    console.log("📤 Sending Group Message:", {
+      groupId,
+      senderId: userInfo._id,
+      message,
+    });
+
+    socket.emit("sendGroupMessage", {
+      groupId,
+      senderId: userInfo._id,
+      message,
+      messageType: "text",
+    });
+
+    socket.on("sendMessageError", (err) => {
+      console.error("❌ Group Message Send Error:", err);
+    });
+  };
+
+  // ✅ Join Group Room
+  const joinGroup = (groupId: string) => {
+    if (socket) socket.emit("joinGroup", groupId);
+  };
+
+  // ✅ Leave Group Room
+  const leaveGroup = (groupId: string) => {
+    if (socket) socket.emit("leaveGroup", groupId);
+  };
+
   return (
-    <SocketContext.Provider value={{ socket, onlineUsers, sendMessage }}>
+    <SocketContext.Provider
+      value={{
+        socket,
+        onlineUsers,
+        sendDirectMessage,
+        sendGroupMessage,
+        joinGroup,
+        leaveGroup,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );
