@@ -22,7 +22,7 @@ const SelectMemberDialog = () => {
     useOrgMembers();
 
   const handleAdd = (member: OrganizationMemberType) => {
-    navigate(`/messages/${member._id}`);
+    navigate(`/messages/dms/${member._id}`);
     setOpen(false);
   };
 
