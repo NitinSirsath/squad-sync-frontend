@@ -11,11 +11,13 @@ import { ChatListItem } from "@/routes/directMessages/types/message.types";
 const HomeSidebar = () => {
   const { userInfo } = useUserStore();
   const { data: chatList, isLoading } = useChatList();
-  console.log(chatList, "chatList");
+
   return (
     <aside className=" bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
       <div className="flex flew-row justify-between align-middle">
-        <h2 className="text-lg font-semibold mb-4">{userInfo?.activeOrg}</h2>
+        <h2 className="text-lg font-semibold mb-4">
+          {userInfo?.organizations[0].role.toUpperCase()}
+        </h2>
 
         {/* <Button variant={"ghost"}>
           <Plus />
