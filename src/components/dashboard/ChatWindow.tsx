@@ -1,9 +1,9 @@
 import { format } from "date-fns";
-import { Message } from "../types/message.types";
+import { Message } from "../../routes/directMessages/types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import useChatWindow from "../hooks/useChatWindow";
+import useChatWindow from "../../routes/directMessages/hooks/useChatWindow";
 
 const ChatWindow = () => {
   const {
