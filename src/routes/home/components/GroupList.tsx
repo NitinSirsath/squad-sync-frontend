@@ -3,6 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useGetGroups } from "@/routes/groups/hooks/group.query";
 import { GroupType } from "@/routes/groups/types/group.types";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import CreateChannelDialog from "@/routes/groups/components/dialog/CreateChannelDialog";
 
 const GroupList = () => {
   const { data: groups, isLoading } = useGetGroups();
@@ -46,6 +49,17 @@ const GroupList = () => {
       ) : (
         <p className="text-gray-400">No channels found</p>
       )}
+
+      {/* ➕ Add Channel Button */}
+      <CreateChannelDialog>
+        <Button
+          variant="ghost"
+          className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Channel
+        </Button>
+      </CreateChannelDialog>
     </div>
   );
 };
