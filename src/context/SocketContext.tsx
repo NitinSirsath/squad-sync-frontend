@@ -54,7 +54,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       // ✅ Listen for new direct messages
-      newSocket.on("newMessage", (message) => {
+      newSocket.on("newDirectMessage", (message) => {
         console.log("📩 New Direct Message:", message);
         queryClient.invalidateQueries({
           queryKey: ["direct-messages", message.senderId],
@@ -69,58 +69,46 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         });
       });
 
-      // Handle socket disconnection
-      newSocket.on("disconnect", (reason) => {
-        console.warn("❌ Socket disconnected:", reason);
-      });
-
-      newSocket.on("connect_error", (err) => {
-        console.error("⚠️ Socket connection error:", err);
-      });
-
       setSocket(newSocket);
 
       return () => {
         newSocket.off("updateOnlineUsers");
         newSocket.off("updateChatList");
-        newSocket.off("newMessage");
+        newSocket.off("newDirectMessage");
         newSocket.off("newGroupMessage");
         newSocket.disconnect();
       };
     }
   }, [userInfo?._id]);
 
-  // ✅ Send Direct Message
+  // ✅ Send Direct Message (Fixed naming)
   const sendDirectMessage = (formData: FormData) => {
     const receiverId = formData.get("receiverId") as string;
     const message = formData.get("message") as string;
-
-    if (socket) {
-      console.log("📤 Sending Direct Message:", {
-        senderId: userInfo?._id,
-        receiverId,
-        message,
-      });
-
-      socket.emit("sendMessage", {
-        senderId: userInfo?._id,
-        receiverId,
-        message,
-      });
-
-      socket.on("messageSent", (data) => {
-        console.log("✅ Message Sent Confirmation:", data);
-      });
-
-      socket.on("sendMessageError", (err) => {
-        console.error("❌ Message Send Error:", err);
-      });
-    } else {
-      console.error("⚠️ No active socket connection");
+    if (!socket || !userInfo?._id) {
+      console.error("⚠️ No active socket connection or user not authenticated");
+      return;
     }
+
+    console.log("📤 Sending Direct Message:", {
+      senderId: userInfo._id,
+      receiverId,
+      message,
+    });
+
+    socket.emit("sendDirectMessage", {
+      senderId: userInfo._id,
+      receiverId,
+      message,
+      messageType: "text",
+    });
+
+    socket.on("sendMessageError", (err) => {
+      console.error("❌ Direct Message Send Error:", err);
+    });
   };
 
-  // ✅ Send Group Message
+  // ✅ Send Group Message (Fixed event name alignment)
   const sendGroupMessage = (groupId: string, message: string) => {
     if (!socket || !userInfo?._id) {
       console.error("⚠️ No active socket connection or user not authenticated");

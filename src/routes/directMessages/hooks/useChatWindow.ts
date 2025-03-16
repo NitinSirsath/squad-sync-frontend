@@ -8,7 +8,7 @@ import { Message } from "../types/message.types";
 const useChatWindow = () => {
   const { userId } = useParams();
   const { userInfo } = useUserStore();
-  const { socket, sendMessage } = useSocket();
+  const { socket, sendDirectMessage } = useSocket();
   const { data: messages, isLoading } = useDirectMessages(userId);
   const [newMessage, setNewMessage] = useState("");
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
@@ -68,7 +68,7 @@ const useChatWindow = () => {
     formData.append("messageType", "text");
     formData.append("fileURL", "");
 
-    sendMessage(formData);
+    sendDirectMessage(formData);
     setNewMessage("");
   };
 
