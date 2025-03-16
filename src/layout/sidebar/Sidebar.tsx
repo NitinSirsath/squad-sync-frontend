@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useLogout } from "@/hooks/auth/useAuth";
 
 const menuItems = [
   { icon: Home, label: "Home", path: "/", tooltip: "Dashboard Overview" },
@@ -50,6 +51,13 @@ const menuItems = [
 
 const Sidebar = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  const { mutate: logout, status } = useLogout();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(undefined, { onSuccess: () => navigate("/login") });
+  };
 
   return (
     <aside className="h-screen border bg-gray-900 text-gray-100 flex flex-col items-center p-4 w-20">
@@ -104,6 +112,8 @@ const Sidebar = () => {
               variant="ghost"
               size="icon"
               className="w-full flex items-center justify-center"
+              disabled={status === "pending"}
+              onClick={handleLogout}
             >
               <LogOut className="size-5" />
             </Button>
