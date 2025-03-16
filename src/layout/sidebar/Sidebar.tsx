@@ -23,7 +23,7 @@ const menuItems = [
   {
     icon: Users,
     label: "Teams",
-    path: "/teams",
+    path: "/channels",
     tooltip: "Manage Teams & Members",
   },
   {

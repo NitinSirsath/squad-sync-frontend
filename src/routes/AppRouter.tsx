@@ -11,8 +11,8 @@ import SonnerToast from "@/components/custom/SonnerToast";
 import Layout from "@/layout/AppLayout";
 import DirectMessagesPage from "./directMessages/DirectMessagePage";
 import ChatWindow from "../components/dashboard/ChatWindow";
-import GroupMessagesPage from "./teams-and-members/TeamAndMembers";
 import GroupChatWindow from "./groups/components/GroupChatWindow";
+import GroupPage from "./groups/Index";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -37,8 +37,9 @@ const AppRouter = () => {
             <Route path="messages/" element={<DirectMessagesPage />}>
               <Route path="dms/:userId" element={<ChatWindow />} />
             </Route>
-            <Route path="/teams" element={<GroupMessagesPage />} />
-            {/* <Route path="calls" element={<CallsPage />} /> */}
+            <Route path="/channels" element={<GroupPage />}>
+              <Route path="/channels/:groupId" element={<GroupChatWindow />} />
+            </Route>
           </Route>
         </Route>
 

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { OrganizationMemberType } from "@/routes/teams-and-members/types/index.types";
+import { OrganizationMemberType } from "@/routes/channels/types/index.types";
 import { useOrgMembers } from "@/routes/organization/hooks/useOrganization.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
