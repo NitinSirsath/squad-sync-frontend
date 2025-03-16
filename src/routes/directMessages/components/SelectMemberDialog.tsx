@@ -15,25 +15,32 @@ import { useOrgMembers } from "@/routes/organization/hooks/useOrganization.query
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
 
-const SelectMemberDialog = () => {
+const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { data: orgMembersData, isLoading: isOrgMembersLoading } =
     useOrgMembers();
 
   const handleAdd = (member: OrganizationMemberType) => {
-    navigate(`/messages/dms/${member._id}`);
+    if (homeLink) {
+      navigate(`/dms/${member._id}`);
+    } else {
+      navigate(`/messages/dms/${member._id}`);
+    }
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost">
-          <Plus className="size-5" />
+        <Button
+          variant="ghost"
+          className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
+        >
+          <Plus className="w-4 h-4" /> New chat
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[420px] p-5 dark:bg-gray-900">
+      <DialogContent className="w-[420px] p-5 ">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
             Select a Member

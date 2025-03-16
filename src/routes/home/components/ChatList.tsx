@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useChatList } from "@/routes/directMessages/hooks/useDirectSms.query";
 import { ChatListItem } from "@/routes/directMessages/types/message.types";
 import { cn } from "@/lib/utils";
+import SelectMemberDialog from "@/routes/directMessages/components/SelectMemberDialog";
 
 const ChatList = () => {
   const { data: chatList, isLoading } = useChatList();
@@ -52,6 +53,7 @@ const ChatList = () => {
       ) : (
         <p className="text-gray-400">No recent messages</p>
       )}
+      <SelectMemberDialog homeLink={true} />
     </div>
   );
 };

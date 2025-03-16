@@ -61,7 +61,7 @@ const GroupChatWindow = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-lg w-full">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Header - Fixed at Top */}
       <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center">
         <h2 className="text-lg font-semibold">Group Chat</h2>
