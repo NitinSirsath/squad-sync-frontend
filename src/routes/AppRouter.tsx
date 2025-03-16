@@ -12,6 +12,7 @@ import Layout from "@/layout/AppLayout";
 import DirectMessagesPage from "./directMessages/DirectMessagePage";
 import ChatWindow from "../components/dashboard/ChatWindow";
 import GroupMessagesPage from "./teams-and-members/TeamAndMembers";
+import GroupChatWindow from "./groups/components/GroupChatWindow";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -31,11 +32,12 @@ const AppRouter = () => {
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />}>
               <Route path="dms/:userId" element={<ChatWindow />} />
+              <Route path="channel/:groupId" element={<GroupChatWindow />} />
             </Route>
             <Route path="messages/" element={<DirectMessagesPage />}>
               <Route path="dms/:userId" element={<ChatWindow />} />
             </Route>
-            <Route path="teams" element={<GroupMessagesPage />} />
+            <Route path="/teams" element={<GroupMessagesPage />} />
             {/* <Route path="calls" element={<CallsPage />} /> */}
           </Route>
         </Route>

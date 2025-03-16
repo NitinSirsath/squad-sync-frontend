@@ -1,8 +1,11 @@
 import {
   AddGroupMember,
   CreateGroupType,
+  GroupSendMessageType,
 } from "@/routes/groups/types/group.types";
 import { axiosInstance } from "../axios/axiosConfig";
+
+//group apis
 
 export const getGroups = async () => {
   const response = await axiosInstance.get("/group/get-groups");
@@ -14,6 +17,8 @@ export const createGroup = async (newGroup: CreateGroupType) => {
   return response.data;
 };
 
+//group member apis
+
 export const getGroupMembers = async (groupId: string) => {
   const response = await axiosInstance.get(`/group-members/${groupId}/members`);
   return response.data.members;
@@ -21,5 +26,22 @@ export const getGroupMembers = async (groupId: string) => {
 
 export const addGroupMember = async (body: AddGroupMember) => {
   const response = await axiosInstance.post("/group-members/add", body);
+  return response.data;
+};
+
+//group messages apis
+
+export const fetchGroupMessages = async (groupId: string) => {
+  const response = await axiosInstance.get(
+    `/group-messages/${groupId}/group-messages`
+  );
+  return response.data.messages.reverse();
+};
+
+export const sendGroupMessage = async (sendBody: GroupSendMessageType) => {
+  const response = await axiosInstance.post(
+    "/group-messages/send-message",
+    sendBody
+  );
   return response.data;
 };

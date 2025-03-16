@@ -23,3 +23,9 @@ export type GroupType = {
   updatedAt: string; // or Date if you want to parse it
   __v: number;
 };
+
+export type GroupSendMessageType = {
+  groupId: string;
+  message: string;
+  messageType: string;
+};

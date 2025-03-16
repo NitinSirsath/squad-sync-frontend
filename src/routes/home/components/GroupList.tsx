@@ -26,7 +26,7 @@ const GroupList = () => {
           {groups.map((group: GroupType) => (
             <NavLink
               key={group._id}
-              to={`/groups/${group._id}`}
+              to={`/channel/${group._id}`}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer",
