@@ -65,7 +65,7 @@ export const useSendGroupMessage = () => {
 
   return useMutation({
     mutationFn: sendGroupMessage,
-    onSuccess: (newMessage, variables) => {
+    onSuccess: (variables) => {
       // ✅ Invalidate and refetch messages for the group
       queryClient.invalidateQueries({
         queryKey: ["group-messages", variables.groupId],

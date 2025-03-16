@@ -40,15 +40,17 @@ const GroupChatWindow = () => {
   // ✅ Listen for new messages via WebSocket
   useEffect(() => {
     if (socket && groupId) {
-      socket.on("newGroupMessage", (message: Message) => {
+      const handleNewMessage = (message: Message) => {
         console.log("📩 New Group Message Received:", message);
         setLocalMessages((prev) => [...prev, message]);
-      });
-    }
+      };
 
-    return () => {
-      socket?.off("newGroupMessage");
-    };
+      socket.on("newGroupMessage", handleNewMessage);
+
+      return () => {
+        socket.off("newGroupMessage", handleNewMessage);
+      };
+    }
   }, [socket, groupId]);
 
   const handleSendMessage = () => {

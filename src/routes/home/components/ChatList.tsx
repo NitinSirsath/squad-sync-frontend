@@ -16,7 +16,7 @@ const ChatList = () => {
       </h3>
       {isLoading ? (
         <div className="space-y-3">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(3)].map((_, i) => (
             <Skeleton key={i} className="h-14 w-full rounded-lg" />
           ))}
         </div>

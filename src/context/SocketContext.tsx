@@ -32,8 +32,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     if (userInfo?._id) {
       const newSocket = io("http://localhost:8000", {
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 2000,
+        reconnectionAttempts: 10, // 🔄 Try reconnecting up to 10 times
+        reconnectionDelay: 3000, // ⏳ Wait 3s before retrying
         transports: ["websocket"],
       });
 
