@@ -1,24 +1,26 @@
 import { NavLink } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useChatList } from "../hooks/useDirectSms.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { ChatListItem } from "../types/message.types";
-import SelectMemberDialog from "./SelectMemberDialog";
+// import SelectMemberDialog from "./SelectMemberDialog";
+import { useChatList } from "@/routes/directMessages/hooks/useDirectSms.query";
+import { useUserStore } from "@/services/stores/user/userStore";
+import { ChatListItem } from "@/routes/directMessages/types/message.types";
 
-const ChatSidebar = () => {
+const HomeSidebar = () => {
+  const { userInfo } = useUserStore();
   const { data: chatList, isLoading } = useChatList();
   console.log(chatList, "chatList");
   return (
-    <aside className="w-80 bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
+    <aside className=" bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
       <div className="flex flew-row justify-between align-middle">
-        <h2 className="text-lg font-semibold mb-4">Messages</h2>
+        <h2 className="text-lg font-semibold mb-4">{userInfo?.activeOrg}</h2>
 
         {/* <Button variant={"ghost"}>
           <Plus />
         </Button> */}
-        <SelectMemberDialog />
+        {/* <SelectMemberDialog /> */}
       </div>
 
       {/* Loading Skeleton */}
@@ -33,7 +35,7 @@ const ChatSidebar = () => {
           {chatList.map((chat: ChatListItem) => (
             <NavLink
               key={chat.chatWith}
-              to={`/messages/dms/${chat.chatWith}`}
+              to={`/dms/${chat.chatWith}`}
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer",
@@ -64,4 +66,4 @@ const ChatSidebar = () => {
   );
 };
 
-export default ChatSidebar;
+export default HomeSidebar;

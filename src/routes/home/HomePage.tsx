@@ -1,8 +1,15 @@
+import PageWrapper from "@/components/custom/PageWrapper";
+import HomeSidebar from "./components/HomeSidebar";
+import { Outlet } from "react-router-dom";
+
 const HomePage = () => {
   return (
-    <div className="flex flex-col items-start gap-1 ">
-      <h1 className="text-2xl font-bold">Welcome to HomePage</h1>
-    </div>
+    <PageWrapper>
+      <HomeSidebar />
+      <div className="flex-1">
+        <Outlet />
+      </div>
+    </PageWrapper>
   );
 };
 

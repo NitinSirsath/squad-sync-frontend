@@ -29,9 +29,11 @@ const AppRouter = () => {
         {/* Protected Routes with Global Layout */}
         <Route element={<ProtectedRoutes userInfo={userInfo} />}>
           <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage />}>
+              <Route path="dms/:userId" element={<ChatWindow />} />
+            </Route>
             <Route path="messages/" element={<DirectMessagesPage />}>
-              <Route path=":userId" element={<ChatWindow />} />
+              <Route path="dms/:userId" element={<ChatWindow />} />
             </Route>
             <Route path="teams" element={<GroupMessagesPage />} />
             {/* <Route path="calls" element={<CallsPage />} /> */}
