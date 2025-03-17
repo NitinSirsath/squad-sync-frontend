@@ -29,3 +29,19 @@ export type GroupSendMessageType = {
   message: string;
   messageType: string;
 };
+
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  profilePicture: string;
+}
+
+interface Member {
+  _id: string;
+  userId: User;
+  role: "admin" | "member";
+  joinedAt: string; // ISO 8601 date-time string
+}
+
+export type GroupMembersType = Member;
