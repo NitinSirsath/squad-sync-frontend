@@ -3,11 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus } from "lucide-react";
-import { OrganizationMemberType } from "@/routes/channels/types/index.types";
 import { useOrgMembers } from "@/routes/organization/hooks/useOrganization.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
 import CustomDialog from "@/components/custom/CustomDialog";
+import { OrganizationMemberType } from "@/types/user.types";
 
 const SelectMemberDialog = ({
   homeLink,

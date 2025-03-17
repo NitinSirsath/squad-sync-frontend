@@ -1,12 +1,12 @@
 import { CreateUserType } from "@/services/api/teams/teams.api";
 import React, { useState } from "react";
-import { useCreateUser } from "./components/useTeamAndMembers.query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
 import { AxiosError } from "axios";
+import { useCreateUser } from "@/components/queries/createUser.query";
 
-const GroupMessagesPage = () => {
+const CreateUser = () => {
   const { mutate, isPending: isLoading, error } = useCreateUser();
 
   const { showToast } = useToastStore();
@@ -112,4 +112,4 @@ const GroupMessagesPage = () => {
   );
 };
 
-export default GroupMessagesPage;
+export default CreateUser;
