@@ -1,37 +1,50 @@
 import { CreateUserType } from "@/services/api/teams/teams.api";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
 import { AxiosError } from "axios";
 import { useCreateUser } from "@/components/queries/createUser.query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CreateUser = () => {
   const { mutate, isPending: isLoading, error } = useCreateUser();
-
   const { showToast } = useToastStore();
 
-  const [formData, setFormData] = useState<CreateUserType>({
-    username: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    role: "employee",
-  });
+  const userObj = useMemo(
+    () => ({
+      username: "",
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      role: "employee",
+    }),
+    []
+  );
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [formData, setFormData] = useState<CreateUserType>(userObj);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    },
+    []
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutate(formData, {
       onError: (err: unknown) => {
         console.log("Mutation Error:", err);
-
         if (err instanceof AxiosError) {
           const errorMessage =
             err.response?.data?.error || "An unexpected error occurred.";
@@ -40,75 +53,109 @@ const CreateUser = () => {
           showToast("Something went wrong.", "error");
         }
       },
+      onSuccess: () => {
+        showToast("New user created", "success");
+        setFormData(userObj);
+      },
     });
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white dark:bg-gray-900 shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Create New User</h2>
+    <Card className=" shadow-lg rounded-lg">
+      <CardHeader>
+        <CardTitle>Create New User</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <Label>Username</Label>
+            <Input
+              name="username"
+              placeholder="Enter username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>First Name</Label>
+              <Input
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <Label>Last Name</Label>
+              <Input
+                name="lastName"
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
+          {/* Role Selection with Styled Select */}
+          <div>
+            <Label>Role</Label>
+            <Select
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value })
+              }
+              defaultValue={formData.role}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="employee">Employee</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Role Selection */}
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        >
-          <option value="employee">Employee</option>
-          <option value="manager">Manager</option>
-          <option value="admin">Admin</option>
-        </select>
+          {/* Submit Button */}
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? "Creating..." : "Create User"}
+          </Button>
 
-        {/* Submit Button */}
-        <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? "Creating..." : "Create User"}
-        </Button>
-
-        {/* Error Message */}
-        {error && (
-          <p className="text-red-500 text-sm mt-2">Failed to create user.</p>
-        )}
-      </form>
-    </div>
+          {/* Error Message */}
+          {error && (
+            <p className="text-red-500 text-sm mt-2">
+              ⚠ Failed to create user.
+            </p>
+          )}
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
