@@ -1,12 +1,17 @@
-import SettingsTabs from "./components/SettingsTabs";
+import { useState } from "react";
+import SettingsSidebar from "./components/SettingsSidebar";
+import SettingsContent from "./components/SettingsContent";
 
 const SettingsPage = () => {
+  const [activeTab, setActiveTab] = useState("profile");
+
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
-        Settings
-      </h2>
-      <SettingsTabs />
+    <div className="flex h-[calc(100vh-60px)]">
+      {/* Sidebar Navigation */}
+      <SettingsSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {/* Main Content */}
+      <SettingsContent activeTab={activeTab} />
     </div>
   );
 };
