@@ -13,6 +13,7 @@ import DirectMessagesPage from "./directMessages/DirectMessagePage";
 import ChatWindow from "../components/dashboard/ChatWindow";
 import GroupChatWindow from "../components/dashboard/ChannelChatWindow";
 import GroupPage from "./channels/Index";
+import SettingsPage from "./settings/SettingsPage";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -30,6 +31,7 @@ const AppRouter = () => {
         {/* Protected Routes with Global Layout */}
         <Route element={<ProtectedRoutes userInfo={userInfo} />}>
           <Route element={<Layout />}>
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<HomePage />}>
               <Route path="dms/:userId" element={<ChatWindow />} />
               <Route path="channel/:groupId" element={<GroupChatWindow />} />
