@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useChatList } from "@/routes/directMessages/hooks/useDirectSms.query";
 import { ChatListItem } from "@/routes/directMessages/types/message.types";
 import { cn } from "@/lib/utils";
-import SelectMemberDialog from "@/routes/directMessages/components/SelectMemberDialog";
+import SelectMemberDialog from "@/components/global/SelectMemberDialog";
 
 const ChatList = () => {
   const { data: chatList, isLoading } = useChatList();

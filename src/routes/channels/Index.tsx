@@ -1,6 +1,6 @@
 import PageWrapper from "@/components/custom/PageWrapper";
 import ChannelSidebar from "./components/ChannelSidebar";
-import GroupChatWindow from "./components/ChannelChatWindow";
+import GroupChatWindow from "../../components/dashboard/ChannelChatWindow";
 
 const ChannelPage = () => {
   return (

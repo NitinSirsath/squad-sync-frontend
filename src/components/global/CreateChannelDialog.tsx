@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useCreateGroup } from "../../hooks/channel.query";
+import { useCreateGroup } from "../../routes/channels/hooks/channel.query";
 import CustomDialog from "@/components/custom/CustomDialog";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
 import { Button } from "@/components/ui/button";

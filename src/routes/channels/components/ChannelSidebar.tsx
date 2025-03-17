@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useGetGroups } from "../hooks/channel.query";
 import { GroupType } from "../types/channel.types";
-import CreateChannelDialog from "./dialog/CreateChannelDialog";
+import CreateChannelDialog from "../../../components/global/CreateChannelDialog";
 
 const ChannelSidebar = () => {
   const { data: groups, isLoading } = useGetGroups();

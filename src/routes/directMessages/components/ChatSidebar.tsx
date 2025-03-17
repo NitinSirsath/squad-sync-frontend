@@ -5,7 +5,7 @@ import { useChatList } from "../hooks/useDirectSms.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ChatListItem } from "../types/message.types";
-import SelectMemberDialog from "./SelectMemberDialog";
+import SelectMemberDialog from "../../../components/global/SelectMemberDialog";
 
 const ChatSidebar = () => {
   const { data: chatList, isLoading } = useChatList();
