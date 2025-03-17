@@ -43,6 +43,7 @@ export const useAddGroupMember = () => {
     mutationFn: addGroupMember,
     onSuccess: (_, variables) => {
       // ✅ Ensure it invalidates only the specific group's data
+      console.log(variables, "variables");
       queryClient.invalidateQueries({
         queryKey: ["group-members", variables.groupId],
       });

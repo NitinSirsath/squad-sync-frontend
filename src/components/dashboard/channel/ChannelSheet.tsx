@@ -23,12 +23,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useGetGroupMembers } from "@/routes/channels/hooks/channel.query";
+import {
+  useAddGroupMember,
+  useGetGroupMembers,
+} from "@/routes/channels/hooks/channel.query";
 import { useParams } from "react-router-dom";
 import { GroupMembersType } from "@/routes/channels/types/channel.types";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useToastStore } from "@/services/stores/toast/useToastStore";
 
 const ChannelSheet = () => {
   const { groupId } = useParams();
+  const { showToast } = useToastStore();
   const { data: OrgMembers, isLoading: orgMembersLoading } = useOrgMembers();
   const { data: channelMembers, isLoading: isChannelMemberLoading } =
     useGetGroupMembers(groupId);
@@ -36,7 +42,7 @@ const ChannelSheet = () => {
   const [selectedMember, setSelectedMember] =
     useState<OrganizationMemberType | null>(null);
   const [open, setOpen] = useState(false);
-
+  const { mutate } = useAddGroupMember();
   // ✅ Filter OrgMembers to exclude already added channel members
   const nonGroupMembers =
     OrgMembers?.members.filter(
@@ -46,11 +52,17 @@ const ChannelSheet = () => {
         )
     ) || [];
 
-  console.log();
-
   const handleAddMember = () => {
-    if (!selectedMember) return;
-    console.log(`Adding ${selectedMember.firstName} to the group...`); // Mock API call
+    if (!selectedMember || !groupId) return;
+    const body = {
+      groupId: groupId,
+      userId: selectedMember._id,
+    };
+    mutate(body, {
+      onSuccess: () => {
+        showToast("Member added to channel", "success");
+      },
+    });
     setSelectedMember(null); // Reset selection
     setOpen(false);
   };
@@ -155,6 +167,32 @@ const ChannelSheet = () => {
             >
               Add Member
             </Button>
+          </div>
+
+          {/* Channel Members List */}
+          <div className="mt-4 space-y-3">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Channel Members
+            </h3>
+            <div className="space-y-2">
+              {channelMembers?.map((member: GroupMembersType) => (
+                <div
+                  key={member.userId._id}
+                  className="flex items-center gap-2"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage
+                      src={member.userId.profilePicture || ""}
+                      alt={member.userId.username}
+                    />
+                    <AvatarFallback>
+                      {member.userId.username.slice(0, 1).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-sm">{member.userId.email}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </SheetContent>
       </Sheet>
