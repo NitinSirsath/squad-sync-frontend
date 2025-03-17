@@ -12,9 +12,11 @@ import { OrganizationType } from "@/services/stores/organization/organizationSto
 import { useNavigate } from "react-router-dom";
 import { useUserInfo } from "@/hooks/auth/useAuth";
 import ThemeWrapper from "@/components/ThemeWrapper";
+import { useUserStore } from "@/services/stores/user/userStore";
 
 const OrganizationPage = () => {
   const navigate = useNavigate();
+  const { userInfo } = useUserStore();
   // Fetch organizations
   const { data: organizations, isLoading } = useUserOrganizations();
   const createOrgMutation = useCreateOrganization();
@@ -46,6 +48,9 @@ const OrganizationPage = () => {
       },
     });
   };
+  const currentOrg = userInfo?.organizations.every(
+    (org) => org.role === "admin"
+  );
 
   return (
     <ThemeWrapper>
@@ -106,6 +111,12 @@ const OrganizationPage = () => {
                     </Button>
                   ))}
                 </div>
+              </div>
+            ) : null}
+
+            {/* Create Organization Section */}
+            {currentOrg && (
+              <div>
                 <div className="relative flex items-center justify-center my-5">
                   <Separator className="w-full my-7" />
                   <span
@@ -118,41 +129,42 @@ const OrganizationPage = () => {
                     OR
                   </span>
                 </div>
+                <h2
+                  className="text-lg text-center font-semibold"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  Create Organization
+                </h2>
+                <Input
+                  type="text"
+                  placeholder="Organization Name"
+                  value={formData.organizationName}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      organizationName: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  placeholder="Industry"
+                  value={formData.industry}
+                  onChange={(e) =>
+                    setFormData({ ...formData, industry: e.target.value })
+                  }
+                />
+                <Button
+                  className="w-full"
+                  onClick={handleCreateOrganization}
+                  disabled={createOrgMutation.isPending}
+                >
+                  {createOrgMutation.isPending
+                    ? "Creating..."
+                    : "Create Organization"}
+                </Button>
               </div>
-            ) : null}
-
-            {/* Create Organization Section */}
-            <h2
-              className="text-lg text-center font-semibold"
-              style={{ color: "var(--foreground)" }}
-            >
-              Create Organization
-            </h2>
-            <Input
-              type="text"
-              placeholder="Organization Name"
-              value={formData.organizationName}
-              onChange={(e) =>
-                setFormData({ ...formData, organizationName: e.target.value })
-              }
-            />
-            <Input
-              type="text"
-              placeholder="Industry"
-              value={formData.industry}
-              onChange={(e) =>
-                setFormData({ ...formData, industry: e.target.value })
-              }
-            />
-            <Button
-              className="w-full"
-              onClick={handleCreateOrganization}
-              disabled={createOrgMutation.isPending}
-            >
-              {createOrgMutation.isPending
-                ? "Creating..."
-                : "Create Organization"}
-            </Button>
+            )}
           </CardContent>
         </div>
       </div>
