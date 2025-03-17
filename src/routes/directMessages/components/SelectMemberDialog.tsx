@@ -1,19 +1,13 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 import { Plus } from "lucide-react";
 import { OrganizationMemberType } from "@/routes/channels/types/index.types";
 import { useOrgMembers } from "@/routes/organization/hooks/useOrganization.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
+import CustomDialog from "@/components/custom/CustomDialog";
 
 const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
   const [open, setOpen] = useState(false);
@@ -22,31 +16,31 @@ const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
     useOrgMembers();
 
   const handleAdd = (member: OrganizationMemberType) => {
-    if (homeLink) {
-      navigate(`/dms/${member._id}`);
-    } else {
-      navigate(`/messages/dms/${member._id}`);
-    }
+    navigate(homeLink ? `/dms/${member._id}` : `/messages/dms/${member._id}`);
     setOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
-        >
-          <Plus className="w-4 h-4" /> New chat
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="w-[420px] p-5 ">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">
-            Select a Member
-          </DialogTitle>
-        </DialogHeader>
-        <ScrollArea className="h-72">
+    <>
+      <Button
+        variant="ghost"
+        className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
+        onClick={() => setOpen(true)}
+      >
+        <Plus className="w-4 h-4" /> New chat
+      </Button>
+
+      <CustomDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Select a Member"
+        actionButtonColor="outline"
+        onAction={() => setOpen(false)}
+        size="sm"
+        isDisabled
+        isSubmitVisible={false}
+      >
+        <ScrollArea>
           {isOrgMembersLoading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
@@ -87,8 +81,8 @@ const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
             <p className="text-gray-500 text-center py-4">No members found</p>
           )}
         </ScrollArea>
-      </DialogContent>
-    </Dialog>
+      </CustomDialog>
+    </>
   );
 };
 

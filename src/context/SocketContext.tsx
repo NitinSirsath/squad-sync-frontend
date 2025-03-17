@@ -160,4 +160,5 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Custom Hook
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => useContext(SocketContext);

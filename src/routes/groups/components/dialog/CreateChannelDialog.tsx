@@ -1,17 +1,12 @@
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useCreateGroup } from "../../hooks/group.query";
+import CustomDialog from "@/components/custom/CustomDialog";
+import { useToastStore } from "@/services/stores/toast/useToastStore";
 
 const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
+  const { showToast } = useToastStore();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -20,7 +15,7 @@ const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
 
   const handleSubmit = () => {
     if (!name.trim() || !description.trim()) {
-      return alert("Please fill all fields!");
+      return showToast("Please fill all fields!", "warning");
     }
 
     createChannel(
@@ -36,13 +31,33 @@ const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
+  useEffect(() => {
+    if (!open) {
+      setName("");
+      setDescription("");
+      setIsPrivate(false);
+    }
+  }, [open]);
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="w-[400px]">
-        <DialogHeader>
-          <DialogTitle>Create Channel</DialogTitle>
-        </DialogHeader>
+    <>
+      <span
+        role="button"
+        onClick={() => setOpen(true)}
+        className="cursor-pointer"
+      >
+        {children}
+      </span>
+
+      <CustomDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Create Channel"
+        actionButtonTitle={isPending ? "Creating..." : "Create"}
+        onAction={handleSubmit}
+        isDisabled={isPending}
+        size="sm"
+      >
         <div className="space-y-4">
           <Input
             placeholder="Channel Name (e.g., finance)"
@@ -58,16 +73,9 @@ const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
             <label className="text-sm text-gray-500">Private Channel</label>
             <Switch checked={isPrivate} onCheckedChange={setIsPrivate} />
           </div>
-          <Button
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="w-full"
-          >
-            {isPending ? "Creating..." : "Create Channel"}
-          </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </CustomDialog>
+    </>
   );
 };
 
