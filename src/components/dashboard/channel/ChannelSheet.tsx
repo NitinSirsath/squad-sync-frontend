@@ -31,6 +31,7 @@ import { useParams } from "react-router-dom";
 import { GroupMembersType } from "@/routes/channels/types/channel.types";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
+import { Label } from "@/components/ui/label";
 
 const ChannelSheet = () => {
   const { groupId } = useParams();
@@ -81,20 +82,39 @@ const ChannelSheet = () => {
           </SheetHeader>
 
           {/* Channel Info */}
-          <div className="mt-4 space-y-3 text-sm text-gray-600 dark:text-gray-400">
-            <p>
-              <strong>Channel Name:</strong> General
-            </p>
-            <p>
-              <strong>Created By:</strong> John Doe
-            </p>
-            <p>
-              <strong>Members:</strong> {channelMembers?.length || 0}
-            </p>
-            <p>
-              <strong>Description:</strong> This is a general discussion
-              channel.
-            </p>
+          <div className="mt-4 space-y-3">
+            <div className="space-y-1">
+              <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Channel Name
+              </Label>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                General
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Created By
+              </Label>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                John Doe
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Members
+              </Label>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {channelMembers?.length || 0}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Description
+              </Label>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                This is a general discussion channel.
+              </p>
+            </div>
           </div>
 
           {/* Divider */}
