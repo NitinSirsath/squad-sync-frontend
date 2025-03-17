@@ -18,7 +18,7 @@ const ChatSidebar = () => {
         {/* <Button variant={"ghost"}>
           <Plus />
         </Button> */}
-        <SelectMemberDialog />
+        <SelectMemberDialog fullTitle={false} />
       </div>
 
       {/* Loading Skeleton */}

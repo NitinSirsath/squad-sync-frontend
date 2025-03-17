@@ -9,7 +9,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from "react-router-dom";
 import CustomDialog from "@/components/custom/CustomDialog";
 
-const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
+const SelectMemberDialog = ({
+  homeLink,
+  fullTitle = true,
+}: {
+  homeLink?: boolean;
+  fullTitle?: boolean;
+}) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { data: orgMembersData, isLoading: isOrgMembersLoading } =
@@ -22,13 +28,25 @@ const SelectMemberDialog = ({ homeLink }: { homeLink?: boolean }) => {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
-        onClick={() => setOpen(true)}
-      >
-        <Plus className="w-4 h-4" /> New chat
-      </Button>
+      <>
+        {fullTitle ? (
+          <Button
+            variant="ghost"
+            className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
+            onClick={() => setOpen(true)}
+          >
+            <Plus className="w-4 h-4" /> New Chat
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            className="flex justify-start items-center gap-2  hover:text-white"
+            onClick={() => setOpen(true)}
+          >
+            <Plus />
+          </Button>
+        )}
+      </>
 
       <CustomDialog
         open={open}
