@@ -116,7 +116,7 @@ const OrganizationPage = () => {
 
             {/* Create Organization Section */}
             {currentOrg && (
-              <div>
+              <>
                 <div className="relative flex items-center justify-center my-5">
                   <Separator className="w-full my-7" />
                   <span
@@ -163,7 +163,7 @@ const OrganizationPage = () => {
                     ? "Creating..."
                     : "Create Organization"}
                 </Button>
-              </div>
+              </>
             )}
           </CardContent>
         </div>
