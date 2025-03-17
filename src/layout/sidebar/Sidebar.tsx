@@ -35,9 +35,9 @@ const menuItems = [
       <div className="p-2 text-sm text-gray-700 dark:text-gray-300">
         <p className="font-semibold">Recent Messages</p>
         <Separator className="my-2" />
-        <p>📩 John: "Let's meet at 3PM"</p>
-        <p>📩 Alice: "Check the new update!"</p>
-        <p>📩 Dev Team: "Sprint planning at 10AM"</p>
+        <p>John: "Let's meet at 3PM"</p>
+        <p>Alice: "Check the new update!"</p>
+        <p>Dev Team: "Sprint planning at 10AM"</p>
       </div>
     ),
   },
@@ -90,7 +90,9 @@ const Sidebar = () => {
                     )}
                   </NavLink>
                 </TooltipTrigger>
-                <TooltipContent>{tooltip}</TooltipContent>
+                <TooltipContent side="right" align="center">
+                  {tooltip}
+                </TooltipContent>
               </Tooltip>
 
               {/* Hover Information Box */}
