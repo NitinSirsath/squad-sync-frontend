@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/services/stores/user/userStore";
 import { cn } from "@/lib/utils";
-import { useFetchGroupMessages } from "../hooks/group.query";
+import { useFetchGroupMessages } from "../hooks/channel.query";
 import { Message } from "@/routes/directMessages/types/message.types";
 
 const GroupChatWindow = () => {

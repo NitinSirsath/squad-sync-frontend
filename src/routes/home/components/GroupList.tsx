@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useGetGroups } from "@/routes/groups/hooks/group.query";
-import { GroupType } from "@/routes/groups/types/group.types";
-import CreateChannelDialog from "@/routes/groups/components/dialog/CreateChannelDialog";
+import { useGetGroups } from "@/routes/channels/hooks/channel.query";
+import { GroupType } from "@/routes/channels/types/Channel.types";
+import CreateChannelDialog from "@/routes/channels/components/dialog/CreateChannelDialog";
 
 const GroupList = () => {
   const { data: groups, isLoading } = useGetGroups();

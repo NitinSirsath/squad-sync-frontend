@@ -5,7 +5,7 @@ import {
   getGroupMembers,
   getGroups,
   sendGroupMessage,
-} from "@/services/api/group/group.api";
+} from "@/services/api/group/channel.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 //group

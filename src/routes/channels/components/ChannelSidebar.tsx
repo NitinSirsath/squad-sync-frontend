@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useGetGroups } from "../hooks/group.query";
-import { GroupType } from "../types/group.types";
+import { useGetGroups } from "../hooks/channel.query";
+import { GroupType } from "../types/channel.types";
 import CreateChannelDialog from "./dialog/CreateChannelDialog";
 
 const ChannelSidebar = () => {

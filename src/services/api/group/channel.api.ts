@@ -2,7 +2,7 @@ import {
   AddGroupMember,
   CreateGroupType,
   GroupSendMessageType,
-} from "@/routes/groups/types/group.types";
+} from "../../../routes/channels/types/Channel.types";
 import { axiosInstance } from "../axios/axiosConfig";
 
 //group apis

@@ -11,8 +11,8 @@ import SonnerToast from "@/components/custom/SonnerToast";
 import Layout from "@/layout/AppLayout";
 import DirectMessagesPage from "./directMessages/DirectMessagePage";
 import ChatWindow from "../components/dashboard/ChatWindow";
-import GroupChatWindow from "./groups/components/GroupChatWindow";
-import GroupPage from "./groups/Index";
+import GroupChatWindow from "./channels/components/ChannelChatWindow";
+import GroupPage from "./channels/Index";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
