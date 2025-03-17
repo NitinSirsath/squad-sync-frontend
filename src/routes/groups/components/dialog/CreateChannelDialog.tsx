@@ -4,8 +4,10 @@ import { Switch } from "@/components/ui/switch";
 import { useCreateGroup } from "../../hooks/group.query";
 import CustomDialog from "@/components/custom/CustomDialog";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
-const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
+const CreateChannelDialog = ({ fullTitle = true }: { fullTitle?: boolean }) => {
   const { showToast } = useToastStore();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -41,13 +43,25 @@ const CreateChannelDialog = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <span
-        role="button"
-        onClick={() => setOpen(true)}
-        className="cursor-pointer"
-      >
-        {children}
-      </span>
+      <>
+        {fullTitle ? (
+          <Button
+            variant="ghost"
+            className="w-full flex justify-start items-center gap-2 text-gray-500 hover:text-white mt-2"
+            onClick={() => setOpen(true)}
+          >
+            <Plus className="w-4 h-4" /> New Chat
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            className="flex justify-start items-center gap-2  hover:text-white"
+            onClick={() => setOpen(true)}
+          >
+            <Plus />
+          </Button>
+        )}
+      </>
 
       <CustomDialog
         open={open}

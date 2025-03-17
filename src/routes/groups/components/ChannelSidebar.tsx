@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useGetGroups } from "../hooks/group.query";
 import { GroupType } from "../types/group.types";
+import CreateChannelDialog from "./dialog/CreateChannelDialog";
 
 const ChannelSidebar = () => {
   const { data: groups, isLoading } = useGetGroups();
@@ -15,6 +16,7 @@ const ChannelSidebar = () => {
           <Plus />
         </Button> */}
         {/* <SelectMemberDialog /> */}
+        <CreateChannelDialog fullTitle={false} />
       </div>
 
       {/* Loading Skeleton */}
