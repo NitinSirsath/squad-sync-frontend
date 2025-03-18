@@ -9,7 +9,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Info, Bell, BellOff, X } from "lucide-react";
+import { Info, Bell, BellOff } from "lucide-react";
 import { useState } from "react";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
 import { UserObjectType } from "@/types/user.types";
@@ -118,10 +118,11 @@ const UserSheet = ({
           {/* Actions */}
           <div className="mt-4 space-y-2">
             <Button
-              className="w-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2"
+              variant={"destructive"}
               onClick={handleRemoveUser}
             >
-              <X className="w-4 h-4" /> Remove User
+              Remove User
             </Button>
             <Button variant="outline" className="w-full">
               View Full Profile
