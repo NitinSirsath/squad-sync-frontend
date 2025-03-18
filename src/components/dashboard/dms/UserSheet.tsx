@@ -12,24 +12,25 @@ import { Switch } from "@/components/ui/switch";
 import { Info, Bell, BellOff, X } from "lucide-react";
 import { useState } from "react";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
+import { UserObjectType } from "@/types/user.types";
 
-const UserSheet = () => {
+const UserSheet = ({
+  userProfile,
+}: {
+  userProfile: UserObjectType | undefined;
+}) => {
   const { showToast } = useToastStore();
   const [isMuted, setIsMuted] = useState(false);
-
-  // Mock Static User Information
-  const user = {
-    fullName: "John Doe",
-    username: "johndoe",
-    email: "john.doe@example.com",
-    role: "Admin",
-    profilePicture: "https://via.placeholder.com/100", // Replace with actual user image URL
-    joinDate: "March 1, 2023",
-  };
 
   const handleRemoveUser = () => {
     showToast("Why you wanna remove your brother", "success");
   };
+
+  if (!userProfile) {
+    return <div>Loading...</div>; // Or handle loading state appropriately
+  }
+
+  const joinDate = new Date(userProfile.createdAt).toLocaleDateString();
 
   return (
     <div className="flex gap-2">
@@ -47,15 +48,20 @@ const UserSheet = () => {
           {/* Profile Section */}
           <div className="flex flex-col items-center gap-4 mt-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={user.profilePicture} alt={user.fullName} />
+              <AvatarImage
+                src={userProfile.profilePicture || ""}
+                alt={`${userProfile.firstName} ${userProfile.lastName}`}
+              />
               <AvatarFallback>
-                {user.username.charAt(0).toUpperCase()}
+                {userProfile.username.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="text-center">
-              <h3 className="text-lg font-semibold">{user.fullName}</h3>
+              <h3 className="text-lg font-semibold">
+                {userProfile.firstName} {userProfile.lastName}
+              </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                @{user.username}
+                @{userProfile.username}
               </p>
             </div>
           </div>
@@ -65,19 +71,27 @@ const UserSheet = () => {
             <div className="space-y-1">
               <Label className="text-sm font-medium">Email</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {user.email}
+                {userProfile.email}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Role</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {user.role}
+                {userProfile.organizations.find(
+                  (org) => org.orgId === userProfile.activeOrg
+                )?.role || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Joined On</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {user.joinDate}
+                {joinDate}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium">Active Organization</Label>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {userProfile.activeOrg}
               </p>
             </div>
           </div>

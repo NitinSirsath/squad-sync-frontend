@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import useChatWindow from "../../../routes/directMessages/hooks/useChatWindow";
 import UserSheet from "./UserSheet";
+import { useUserProfileById } from "@/hooks/user/useUser.query";
 
 const ChatWindow = () => {
   const {
@@ -17,16 +18,17 @@ const ChatWindow = () => {
     handleSendMessage,
     setNewMessage,
   } = useChatWindow();
+  const { data: userProfile } = useUserProfileById(userId as string);
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Chat Header */}
       <div className="p-4 border-b dark:border-gray-700 flex items-center gap-3">
         <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          Chat with {userId}
+          {userProfile?.firstName} {userProfile?.lastName}
         </h2>
         <div className="flex flex-1 justify-end">
-          <UserSheet />
+          <UserSheet userProfile={userProfile} />
         </div>
       </div>
 
