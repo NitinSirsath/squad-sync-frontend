@@ -1,5 +1,5 @@
 import { UserPlus, CalendarDays, Info, Bell } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 const NotificationPopOver = () => {
+  const [open, setOpen] = useState(false);
   const notifications = useMemo(() => {
     return [
       {
@@ -58,13 +59,22 @@ const NotificationPopOver = () => {
     ];
   }, []);
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          size="icon"
+        >
           <Bell className="size-5 text-gray-600 dark:text-gray-300" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-96 p-0 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <PopoverContent
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="w-96 p-0 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+      >
         <Card>
           <CardContent className="p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">

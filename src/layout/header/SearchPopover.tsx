@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const SearchPopover = () => {
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const searchInputRef = useRef(null);
   const recommendations = useMemo(() => {
     return [
@@ -44,17 +44,22 @@ const SearchPopover = () => {
   }, []);
   return (
     <div ref={searchInputRef}>
-      <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setSearchOpen(true)}
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
           >
             <Search className="size-5 text-gray-600 dark:text-gray-300" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <PopoverContent
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          className="w-[400px] p-0 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+        >
           <Card>
             <CardContent className="p-4">
               <Input

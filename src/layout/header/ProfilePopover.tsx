@@ -9,17 +9,29 @@ import { Separator } from "@/components/ui/separator";
 import { UserCircle, LogOut, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/services/stores/user/userStore";
+import { useState } from "react";
 
 const ProfilePopover = () => {
   const { userInfo } = useUserStore();
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
           <UserCircle className="size-6 text-blue-600 dark:text-blue-400" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-6 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <PopoverContent
+        className="w-80 p-6 rounded-lg shadow-xl border"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
         <div className="flex flex-col items-center space-y-4">
           <Avatar className="h-20 w-20 border-2 border-blue-500">
             <AvatarImage src="/placeholder-avatar.jpg" alt="User Avatar" />
