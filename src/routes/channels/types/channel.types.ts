@@ -66,3 +66,9 @@ export interface GroupInfoType {
   updatedAt: string;
   __v: number;
 }
+
+export type updateChanneBodyType = {
+  groupId: string;
+  name: string | undefined;
+  description: string | undefined;
+};

@@ -2,6 +2,7 @@ import {
   AddGroupMember,
   CreateGroupType,
   GroupSendMessageType,
+  updateChanneBodyType,
 } from "../../../routes/channels/types/channel.types";
 import { axiosInstance } from "../axios/axiosConfig";
 
@@ -48,5 +49,10 @@ export const sendGroupMessage = async (sendBody: GroupSendMessageType) => {
 
 export const getGroupInfo = async (groupId: string) => {
   const response = await axiosInstance.get(`/group/${groupId}`);
+  return response.data;
+};
+
+export const updateGroup = async (updateBody: updateChanneBodyType) => {
+  const response = await axiosInstance.post("/group/update-group", updateBody);
   return response.data;
 };

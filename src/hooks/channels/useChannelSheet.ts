@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   useAddGroupMember,
   useGetGroupMembers,
-  useGroupInfo,
 } from "@/routes/channels/hooks/channel.query";
 import { useParams } from "react-router-dom";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
@@ -16,8 +15,6 @@ const useChannelSheet = () => {
   const { data: OrgMembers, isLoading: orgMembersLoading } = useOrgMembers();
   const { data: channelMembers, isLoading: isChannelMemberLoading } =
     useGetGroupMembers(groupId);
-
-  const { data: groupInfoData, isLoading } = useGroupInfo(groupId as string);
 
   const { mutate: addMember } = useAddGroupMember();
 
@@ -55,8 +52,6 @@ const useChannelSheet = () => {
   };
 
   return {
-    isLoading,
-    groupInfoData,
     orgMembersLoading,
     isChannelMemberLoading,
     nonGroupMembers,

@@ -6,6 +6,7 @@ import {
   getGroupMembers,
   getGroups,
   sendGroupMessage,
+  updateGroup,
 } from "@/services/api/group/channel.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -71,6 +72,20 @@ export const useSendGroupMessage = () => {
       // ✅ Invalidate and refetch messages for the group
       queryClient.invalidateQueries({
         queryKey: ["group-messages", variables.groupId],
+      });
+    },
+  });
+};
+
+export const useChannelUpdate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateGroup,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["get-groups"] });
+      queryClient.invalidateQueries({
+        queryKey: ["group-info", variables.groupId],
       });
     },
   });
