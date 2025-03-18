@@ -10,7 +10,7 @@ import { useUserStore } from "@/services/stores/user/userStore";
 import SonnerToast from "@/components/custom/SonnerToast";
 import Layout from "@/layout/AppLayout";
 import DirectMessagesPage from "./directMessages/DirectMessagePage";
-import ChatWindow from "../components/dashboard/ChatWindow";
+import ChatWindow from "../components/dashboard/dms/ChatWindow";
 import GroupChatWindow from "../components/dashboard/channel/ChannelChatWindow";
 import GroupPage from "./channels/Index";
 import SettingsPage from "./settings/SettingsPage";

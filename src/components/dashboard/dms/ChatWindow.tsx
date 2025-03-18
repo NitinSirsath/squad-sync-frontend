@@ -1,9 +1,10 @@
 import { format } from "date-fns";
-import { Message } from "../../routes/directMessages/types/message.types";
+import { Message } from "../../../routes/directMessages/types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import useChatWindow from "../../routes/directMessages/hooks/useChatWindow";
+import useChatWindow from "../../../routes/directMessages/hooks/useChatWindow";
+import UserSheet from "./UserSheet";
 
 const ChatWindow = () => {
   const {
@@ -24,6 +25,9 @@ const ChatWindow = () => {
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
           Chat with {userId}
         </h2>
+        <div className="flex flex-1 justify-end">
+          <UserSheet />
+        </div>
       </div>
 
       {/* Messages */}

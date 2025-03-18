@@ -1,6 +1,6 @@
 import PageWrapper from "@/components/custom/PageWrapper";
 import ChatSidebar from "./components/ChatSidebar";
-import ChatWindow from "../../components/dashboard/ChatWindow";
+import ChatWindow from "../../components/dashboard/dms/ChatWindow";
 import { useChatList } from "./hooks/useDirectSms.query";
 
 const DirectMessagesPage = () => {
