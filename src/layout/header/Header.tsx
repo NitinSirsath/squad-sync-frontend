@@ -20,14 +20,13 @@ const Header = () => {
           <ChevronRight className="size-5 text-gray-600 dark:text-gray-300" />
         </Button>
       </div>
-      <div className="flex-1 flex justify-end pr-6 gap-3">
-        <SearchPopover />
-      </div>
+      <div className="flex-1 flex justify-end pr-6 gap-3"></div>
       {/* Search Bar (Aligned Right) */}
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center pr-6 gap-3">
         <ModeToggle />
+        <SearchPopover />
         <NotificationPopOver />
         <ProfilePopover />
       </div>
