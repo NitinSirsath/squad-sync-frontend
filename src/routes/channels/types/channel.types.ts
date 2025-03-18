@@ -45,3 +45,24 @@ interface Member {
 }
 
 export type GroupMembersType = Member;
+
+export interface GroupInfoType {
+  _id: string;
+  name: string;
+  description: string;
+  createdBy: {
+    _id: string;
+    email: string;
+  };
+  orgId: {
+    _id: string;
+    name: string;
+  };
+  membersCount: number;
+  isPrivate: boolean;
+  groupIcon: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

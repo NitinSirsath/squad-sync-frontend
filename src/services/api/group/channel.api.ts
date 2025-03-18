@@ -45,3 +45,8 @@ export const sendGroupMessage = async (sendBody: GroupSendMessageType) => {
   );
   return response.data;
 };
+
+export const getGroupInfo = async (groupId: string) => {
+  const response = await axiosInstance.get(`/group/${groupId}`);
+  return response.data;
+};

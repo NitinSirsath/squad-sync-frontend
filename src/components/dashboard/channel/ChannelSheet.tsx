@@ -6,10 +6,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useOrgMembers } from "@/routes/organization/hooks/useOrganization.query";
 import { OrganizationMemberType } from "@/types/user.types";
 import { Info, Plus, Check, ChevronsUpDown, X } from "lucide-react";
-import { useState } from "react";
+
 import {
   Command,
   CommandGroup,
@@ -23,68 +22,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import {
-  useAddGroupMember,
-  useGetGroupMembers,
-} from "@/routes/channels/hooks/channel.query";
-import { useParams } from "react-router-dom";
+
 import { GroupMembersType } from "@/routes/channels/types/channel.types";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useToastStore } from "@/services/stores/toast/useToastStore";
 import { Label } from "@/components/ui/label";
+import useChannelSheet from "@/hooks/channels/useChannelSheet";
 
 const ChannelSheet = () => {
-  const { groupId } = useParams();
-  const { showToast } = useToastStore();
-  const { data: OrgMembers, isLoading: orgMembersLoading } = useOrgMembers();
-  const { data: channelMembers, isLoading: isChannelMemberLoading } =
-    useGetGroupMembers(groupId);
-
-  const { mutate: addMember } = useAddGroupMember();
-  //   const { mutate: removeMember } = useRemoveGroupMember();
-
-  const [selectedMember, setSelectedMember] =
-    useState<OrganizationMemberType | null>(null);
-  const [open, setOpen] = useState(false);
-
-  // ✅ Filter OrgMembers to exclude already added channel members
-  const nonGroupMembers =
-    OrgMembers?.members.filter(
-      (member: OrganizationMemberType) =>
-        !channelMembers?.some(
-          (chMember: GroupMembersType) => chMember.userId._id === member._id
-        )
-    ) || [];
-
-  const handleAddMember = () => {
-    if (!selectedMember || !groupId) return;
-    const body = {
-      groupId: groupId,
-      userId: selectedMember._id,
-    };
-    addMember(body, {
-      onSuccess: () => {
-        showToast("Member added to channel", "success");
-      },
-    });
-    setSelectedMember(null); // Reset selection
-    setOpen(false);
-  };
-
-  const handleRemoveMember = (memberId: string) => {
-    if (!groupId || !memberId) return;
-    showToast("Feature yet to be published", "info");
-    // const body = {
-    //   groupId: groupId,
-    //   userId: memberId,
-    // };
-    // removeMember(body, {
-    //   onSuccess: () => {
-    //     showToast("Member removed from channel", "success");
-    //   },
-    // });
-  };
-
+  const {
+    isLoading,
+    groupInfoData,
+    orgMembersLoading,
+    isChannelMemberLoading,
+    nonGroupMembers,
+    setOpen,
+    selectedMember,
+    setSelectedMember,
+    handleRemoveMember,
+    handleAddMember,
+    channelMembers,
+    open,
+  } = useChannelSheet();
   return (
     <div className="flex gap-2">
       <Sheet>
@@ -97,31 +55,31 @@ const ChannelSheet = () => {
           <SheetHeader>
             <SheetTitle>Channel Details</SheetTitle>
           </SheetHeader>
-
+          {isLoading && "Loading..."}
           {/* Channel Info */}
           <div className="mt-4 space-y-3">
             <div className="space-y-1">
               <Label className="text-sm font-medium">Channel Name</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                General
+                {groupInfoData?.name || "Loading..."}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Created By</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                John Doe
+                {groupInfoData?.createdBy.email || "Loading..."}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Members</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {channelMembers?.length || 0}
+                {groupInfoData?.membersCount || 0}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Description</Label>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                This is a general discussion channel.
+                {groupInfoData?.description || "No description available."}
               </p>
             </div>
           </div>

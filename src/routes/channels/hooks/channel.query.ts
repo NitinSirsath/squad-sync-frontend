@@ -2,6 +2,7 @@ import {
   addGroupMember,
   createGroup,
   fetchGroupMessages,
+  getGroupInfo,
   getGroupMembers,
   getGroups,
   sendGroupMessage,
@@ -72,5 +73,13 @@ export const useSendGroupMessage = () => {
         queryKey: ["group-messages", variables.groupId],
       });
     },
+  });
+};
+
+export const useGroupInfo = (groupId: string) => {
+  return useQuery({
+    queryKey: ["group-info", groupId],
+    queryFn: () => getGroupInfo(groupId),
+    enabled: !!groupId,
   });
 };
