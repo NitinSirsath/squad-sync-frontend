@@ -2,14 +2,14 @@ import { useUserStore } from "@/services/stores/user/userStore";
 import ChatList from "./ChatList";
 import GroupList from "./GroupList";
 import VoiceChatList from "./VoiceChatList";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// import { ScrollArea } from "@/components/ui/scroll-area";
 
 const HomeSidebar = () => {
   const { userInfo } = useUserStore();
 
   return (
-    <ScrollArea>
-      <aside className="w-80 bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
+    <>
+      <aside className="w-80  bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
         <div className="mb-4">
           <h2 className="text-lg font-semibold">
             {userInfo?.organizations[0].role.toUpperCase()}
@@ -26,7 +26,7 @@ const HomeSidebar = () => {
         {/* Direct Messages Section */}
         <ChatList />
       </aside>
-    </ScrollArea>
+    </>
   );
 };
 

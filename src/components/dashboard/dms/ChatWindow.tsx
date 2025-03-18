@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { format } from "date-fns";
 import { Message } from "../../../routes/directMessages/types/message.types";
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,7 @@ import { cn } from "@/lib/utils";
 import useChatWindow from "../../../routes/directMessages/hooks/useChatWindow";
 import UserSheet from "./UserSheet";
 import { useUserProfileById } from "@/hooks/user/useUser.query";
+import { useSocket } from "@/context/SocketContext";
 
 const ChatWindow = () => {
   const {
@@ -18,7 +20,40 @@ const ChatWindow = () => {
     handleSendMessage,
     setNewMessage,
   } = useChatWindow();
+
   const { data: userProfile } = useUserProfileById(userId as string);
+  const { markMessagesAsSeen, socket } = useSocket();
+
+  // ✅ Mark messages as seen when the chat opens
+  useEffect(() => {
+    if (userId) {
+      markMessagesAsSeen(userId);
+    }
+  }, [userId]);
+
+  // ✅ Listen for message seen updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleSeenUpdate = ({
+      senderId,
+      receiverId,
+    }: {
+      senderId: string;
+      receiverId: string;
+    }) => {
+      if (receiverId === userInfo?._id) {
+        console.log(`👀 Messages from ${senderId} marked as seen`);
+      }
+    };
+
+    socket.on("messagesMarkedAsSeen", handleSeenUpdate);
+
+    return () => {
+      socket.off("messagesMarkedAsSeen", handleSeenUpdate);
+    };
+  }, [socket, userInfo?._id]);
+
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Chat Header */}
@@ -65,6 +100,12 @@ const ChatWindow = () => {
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
                   {format(new Date(msg.createdAt), "hh:mm a")}
                 </div>
+                {/* ✅ Show 'Seen' indicator for sent messages */}
+                {msg.senderId === userInfo?._id && msg.seen && (
+                  <div className="text-xs text-green-500 dark:text-green-400 font-medium">
+                    Seen
+                  </div>
+                )}
               </div>
             </div>
           ))
