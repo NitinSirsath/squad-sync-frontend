@@ -14,7 +14,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -32,24 +31,37 @@ const BugTable = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [reportedByFilter, setReportedByFilter] = useState<string>("all");
 
-  // Ensure useMemo is called at the top level (Fix 1)
+  // Extract unique reporters for the filter dropdown
+
+  // Filtered bug list
   const filteredBugs = useMemo(() => {
     return bugs?.filter((bug: BugReport) => {
       return (
         (categoryFilter === "all" || bug.category === categoryFilter) &&
         (severityFilter === "all" || bug.severity === severityFilter) &&
         (statusFilter === "all" || bug.status === statusFilter) &&
+        (reportedByFilter === "all" ||
+          bug.reportedBy?.username === reportedByFilter) &&
         (searchQuery === "" ||
           bug.title.toLowerCase().includes(searchQuery.toLowerCase()))
       );
     });
-  }, [bugs, searchQuery, categoryFilter, severityFilter, statusFilter]);
+  }, [
+    bugs,
+    searchQuery,
+    categoryFilter,
+    severityFilter,
+    statusFilter,
+    reportedByFilter,
+  ]);
 
   if (isLoading) return <p>Loading bugs...</p>;
 
   return (
-    <div className="p-6 rounded-2xl shadow-lg dark:bg-gray-950">
+    <div className="p-6 rounded-2xl shadow-lg dark:bg-gray-950 max-h-[90vh] flex flex-col">
+      {/* Filters & Search Bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         {/* Search Bar */}
         <div className="flex-1 flex items-center">
@@ -108,11 +120,37 @@ const BugTable = () => {
               <SelectItem value="resolved">Resolved</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Reported By Filter */}
+          <Select value={reportedByFilter} onValueChange={setReportedByFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Reported By" />
+            </SelectTrigger>
+            <SelectContent>
+              {/* Always include "All" option */}
+              <SelectItem key="all" value="all">
+                All
+              </SelectItem>
+
+              {/* Extract unique reporters, ensuring they are strings */}
+              {Array.from(
+                new Set<string>(
+                  bugs?.map(
+                    (bug: BugReport) => bug.reportedBy?.username || "Unknown"
+                  ) ?? []
+                )
+              ).map((reporter) => (
+                <SelectItem key={reporter} value={reporter}>
+                  {reporter}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
-      {/* Bug Table */}
-      <ScrollArea className="max-h-[600px]">
+      {/* Bug Table with Scrolling */}
+      <ScrollArea className="flex-1 overflow-y-auto">
         <Table>
           <TableCaption>A list of reported bugs</TableCaption>
           <TableHeader>
@@ -141,7 +179,7 @@ const BugTable = () => {
                         bug.status === "open"
                           ? "destructive"
                           : bug.status === "resolved"
-                          ? "secondary" // Fix 2: Changed from "success" to "secondary"
+                          ? "secondary"
                           : "outline"
                       }
                     >
@@ -167,16 +205,6 @@ const BugTable = () => {
               </TableRow>
             )}
           </TableBody>
-          {filteredBugs?.length > 0 && (
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={5}>Total Bugs</TableCell>
-                <TableCell className="text-right">
-                  {filteredBugs.length}
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
         </Table>
       </ScrollArea>
 
