@@ -57,7 +57,8 @@ export default function CustomDialog({
           <DialogTitle className="text-lg font-semibold">{title}</DialogTitle>
         </DialogHeader>
 
-        <div className="py-4">{children}</div>
+        {/* ✅ Added max height and scrolling to children */}
+        <div className="py-4 max-h-[70vh] overflow-y-auto">{children}</div>
 
         <DialogFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
