@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRegister } from "@/hooks/auth/useAuth";
 import { UserRegisterFormType } from "@/types/user.types";
+import { useToastStore } from "@/services/stores/toast/useToastStore";
 
 export function RegisterForm({
   className,
@@ -14,6 +15,10 @@ export function RegisterForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const { mutate, status, error } = useRegister();
   const navigate = useNavigate();
+  const { showToast } = useToastStore();
+  const handleFeature = () => {
+    showToast("Feature is in development");
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<UserRegisterFormType>({
     username: "",
@@ -23,8 +28,73 @@ export function RegisterForm({
     lastName: "",
   });
 
+  // ✅ Validation State
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
+
+  // ✅ Email Validation Function
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // ✅ Handle Register with Validation
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
+    let isValid = true;
+    const newErrors = {
+      username: "",
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+    };
+
+    // ✅ Validate Username
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required.";
+      isValid = false;
+    }
+
+    // ✅ Validate Email
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Invalid email format.";
+      isValid = false;
+    }
+
+    // ✅ Validate Password
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required.";
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+      isValid = false;
+    }
+
+    // ✅ Validate First Name
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required.";
+      isValid = false;
+    }
+
+    // ✅ Validate Last Name
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    if (!isValid) return; // Stop submission if validation fails
+
+    // ✅ Proceed with API Call
     mutate(formData, {
       onSuccess: () => navigate("/login"),
     });
@@ -61,7 +131,7 @@ export function RegisterForm({
                 </div>
               </div>
 
-              {/* Error Message */}
+              {/* API Error Message */}
               {error && (
                 <p className="text-red-500 text-sm text-center">
                   {error.message}
@@ -70,6 +140,7 @@ export function RegisterForm({
 
               {/* Input Fields */}
               <div className="flex flex-col gap-4">
+                {/* Username */}
                 <div className="grid gap-2">
                   <Label htmlFor="username">Username</Label>
                   <Input
@@ -80,9 +151,14 @@ export function RegisterForm({
                     onChange={(e) =>
                       setFormData({ ...formData, username: e.target.value })
                     }
-                    required
+                    className={errors.username ? "border-red-500" : ""}
                   />
+                  {errors.username && (
+                    <p className="text-red-500 text-xs">{errors.username}</p>
+                  )}
                 </div>
+
+                {/* Email */}
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -93,9 +169,14 @@ export function RegisterForm({
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    required
+                    className={errors.email ? "border-red-500" : ""}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs">{errors.email}</p>
+                  )}
                 </div>
+
+                {/* Password with Show/Hide */}
                 <div className="grid gap-2 relative">
                   <Label htmlFor="password">Password</Label>
                   <Input
@@ -106,16 +187,21 @@ export function RegisterForm({
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    required
+                    className={errors.password ? "border-red-500" : ""}
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-2 top-5 flex items-center "
+                    className="absolute inset-y-0 right-2 top-5 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
+                  {errors.password && (
+                    <p className="text-red-500 text-xs">{errors.password}</p>
+                  )}
                 </div>
+
+                {/* First & Last Name */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="firstName">First Name</Label>
@@ -127,8 +213,11 @@ export function RegisterForm({
                       onChange={(e) =>
                         setFormData({ ...formData, firstName: e.target.value })
                       }
-                      required
+                      className={errors.firstName ? "border-red-500" : ""}
                     />
+                    {errors.firstName && (
+                      <p className="text-red-500 text-xs">{errors.firstName}</p>
+                    )}
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="lastName">Last Name</Label>
@@ -140,10 +229,15 @@ export function RegisterForm({
                       onChange={(e) =>
                         setFormData({ ...formData, lastName: e.target.value })
                       }
-                      required
+                      className={errors.lastName ? "border-red-500" : ""}
                     />
+                    {errors.lastName && (
+                      <p className="text-red-500 text-xs">{errors.lastName}</p>
+                    )}
                   </div>
                 </div>
+
+                {/* Register Button */}
                 <Button
                   type="submit"
                   className="w-full"
@@ -152,8 +246,6 @@ export function RegisterForm({
                   {status === "pending" ? "Processing..." : "Register"}
                 </Button>
               </div>
-
-              {/* OR Separator */}
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or
@@ -162,7 +254,11 @@ export function RegisterForm({
 
               {/* Social Logins */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={handleFeature}
+                  variant="outline"
+                  className="w-full"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
@@ -171,10 +267,14 @@ export function RegisterForm({
                   </svg>
                   Continue with Apple
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={handleFeature}
+                  variant="outline"
+                  className="w-full"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
-                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-   1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
                       fill="currentColor"
                     />
                   </svg>
