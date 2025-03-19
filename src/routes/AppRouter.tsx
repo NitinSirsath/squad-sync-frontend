@@ -20,7 +20,7 @@ const AppRouter = () => {
   const { userInfo } = useUserStore();
 
   return (
-    <div>
+    <div className="relative">
       <SonnerToast />
       <Routes>
         {/* Public Routes (Only accessible when logged out) */}

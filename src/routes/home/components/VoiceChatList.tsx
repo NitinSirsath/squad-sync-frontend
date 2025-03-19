@@ -9,7 +9,7 @@ const VoiceChatList = () => {
   return (
     <div className="mt-4">
       <h3 className="text-sm font-semibold text-gray-500 mb-2 uppercase">
-        Huddles (Voice Chats)
+        Voice Chats
       </h3>
       <div className="space-y-1 overflow-auto">
         {voiceChats.map((chat) => (
