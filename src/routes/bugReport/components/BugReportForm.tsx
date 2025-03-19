@@ -28,13 +28,22 @@ const BugReportForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleCategoryChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, category: value }));
+  };
+
   const handleSeverityChange = (value: string) => {
     setFormData((prev) => ({ ...prev, severity: value }));
   };
 
   const handleSubmit = () => {
     createBug(formData);
-    setFormData({ title: "", category: "", severity: "low", description: "" });
+    setFormData({
+      title: "",
+      category: "ui",
+      severity: "low",
+      description: "",
+    });
     setIsOpen(false); // Close the modal after submission
   };
 
@@ -60,13 +69,26 @@ const BugReportForm = () => {
             onChange={handleChange}
             required
           />
-          <Input
-            name="category"
-            placeholder="Category"
+
+          {/* Category Select Dropdown */}
+          <Select
             value={formData.category}
-            onChange={handleChange}
-            required
-          />
+            onValueChange={handleCategoryChange}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ui">User interface</SelectItem>
+              <SelectItem value="ux">User experience</SelectItem>
+              <SelectItem value="functionality">Functionality</SelectItem>
+              <SelectItem value="performance">Performance</SelectItem>
+              <SelectItem value="security">Security</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Severity Select Dropdown */}
           <Select
             value={formData.severity}
             onValueChange={handleSeverityChange}
@@ -81,6 +103,7 @@ const BugReportForm = () => {
               <SelectItem value="critical">Critical</SelectItem>
             </SelectContent>
           </Select>
+
           <Textarea
             name="description"
             placeholder="Bug Description"
