@@ -14,7 +14,7 @@ interface IProps {
 const MessageContainer = ({ isLoading, localMessages, chatEndRef }: IProps) => {
   const { userInfo } = useUserStore();
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+    <div className="flex-1 overflow-y-auto p-4 space-y-4 ">
       {isLoading ? (
         <p className="text-center text-gray-600 dark:text-gray-400">
           Loading messages...

@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import useChannelWindow from "@/hooks/channels/useChannelWindow";
 import ChannelSheet from "./ChannelSheet";
 import { Avatar } from "@/components/ui/avatar";
-
-import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
 import ChannelChat from "./ChannelChat";
 
 const GroupChatWindow = () => {
@@ -17,8 +14,6 @@ const GroupChatWindow = () => {
     setNewMessage,
     handleSendMessage,
   } = useChannelWindow();
-
-  const { setTheme, theme } = useTheme();
 
   return (
     <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
@@ -38,13 +33,6 @@ const GroupChatWindow = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            {theme === "light" ? <Moon /> : <Sun />}
-          </Button>
           <ChannelSheet />
         </div>
       </div>
