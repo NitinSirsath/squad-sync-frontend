@@ -150,10 +150,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       message,
       messageType: "text",
     });
-
-    setTimeout(() => {
-      queryClient.invalidateQueries({ queryKey: ["chat-list"] });
-    }, 200);
   };
 
   const markMessagesAsSeen = (senderId: string) => {
