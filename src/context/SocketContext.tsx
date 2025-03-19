@@ -12,6 +12,7 @@ type SocketContextType = {
   joinGroup: (groupId: string) => void;
   leaveGroup: (groupId: string) => void;
   markMessagesAsSeen: (senderId: string) => void;
+  socketLoading: boolean; // Add loading state
 };
 
 const SocketContext = createContext<SocketContextType>({
@@ -22,6 +23,7 @@ const SocketContext = createContext<SocketContextType>({
   joinGroup: () => {},
   leaveGroup: () => {},
   markMessagesAsSeen: () => {},
+  socketLoading: true, // Initially loading
 });
 
 // ✅ Socket Provider
@@ -29,6 +31,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const { userInfo } = useUserStore();
+  const [socketLoading, setSocketLoading] = useState(true);
 
   useEffect(() => {
     if (!userInfo?._id) {
@@ -42,19 +45,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     const newSocket = io("http://localhost:8000", {
       reconnection: true,
-      reconnectionAttempts: 10, // 🔄 Try reconnecting up to 10 times
-      reconnectionDelay: 3000, // ⏳ Wait 3s before retrying
+      reconnectionAttempts: 10,
+      reconnectionDelay: 3000,
       transports: ["websocket"],
     });
 
-    // ✅ Connection Events
     newSocket.on("connect", () => {
       console.log("✅ Connected to WebSocket:", newSocket.id);
       newSocket.emit("registerUser", userInfo._id);
+      setSocketLoading(false); // Socket connected
     });
 
     newSocket.on("connect_error", (err) => {
       console.error("❌ WebSocket Connection Error:", err.message);
+      setSocketLoading(false); // Connection failed, set loading to false
     });
 
     newSocket.on("disconnect", (reason) => {
@@ -66,31 +70,23 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     newSocket.on("updateOnlineUsers", (users: string[]) => {
-      console.log("🟢 Online Users Updated:", users);
       setOnlineUsers(users);
     });
 
     newSocket.on("updateChatList", () => {
-      console.log("🔄 Refreshing chat list...");
       queryClient.invalidateQueries({ queryKey: ["chat-list"] });
     });
 
     newSocket.on("newDirectMessage", (message) => {
-      console.log("📩 New Direct Message:", message);
-
-      // ✅ Update only the specific direct message thread
       queryClient.invalidateQueries({
         queryKey: ["direct-messages", message.senderId],
       });
-
-      // ✅ Use a small delay to batch chat-list updates
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["chat-list"] });
       }, 200);
     });
 
     newSocket.on("newGroupMessage", (message) => {
-      console.log("📩 New Group Message:", message);
       queryClient.invalidateQueries({
         queryKey: ["group-messages", message.groupId],
       });
@@ -99,23 +95,22 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     setSocket(newSocket);
 
     return () => {
-      console.log("❌ Disconnecting WebSocket...");
-      newSocket.off("updateOnlineUsers");
-      newSocket.off("updateChatList");
-      newSocket.off("newDirectMessage");
-      newSocket.off("newGroupMessage");
-      newSocket.disconnect();
+      if (newSocket) {
+        newSocket.off("connect");
+        newSocket.off("connect_error");
+        newSocket.off("disconnect");
+        newSocket.off("reconnect_attempt");
+        newSocket.off("updateOnlineUsers");
+        newSocket.off("updateChatList");
+        newSocket.off("newDirectMessage");
+        newSocket.off("newGroupMessage");
+        newSocket.disconnect();
+      }
     };
   }, [userInfo?._id]);
 
-  // ✅ Listen for messages being marked as seen
   useEffect(() => {
-    if (!socket) {
-      console.warn(
-        "⚠️ Socket not initialized, skipping mark as seen listener."
-      );
-      return;
-    }
+    if (!socket) return;
 
     const handleSeenUpdate = ({
       senderId,
@@ -125,9 +120,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       receiverId: string;
     }) => {
       if (receiverId === userInfo?._id) {
-        console.log(`👀 Messages from ${senderId} marked as seen`);
-
-        // ✅ Avoid multiple API calls
         setTimeout(() => {
           queryClient.invalidateQueries({
             queryKey: ["direct-messages", senderId],
@@ -140,25 +132,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     socket.on("messagesMarkedAsSeen", handleSeenUpdate);
 
     return () => {
-      socket.off("messagesMarkedAsSeen", handleSeenUpdate);
+      if (socket) {
+        socket.off("messagesMarkedAsSeen", handleSeenUpdate);
+      }
     };
   }, [socket, userInfo?._id]);
 
-  // ✅ Send Direct Message
   const sendDirectMessage = (formData: FormData) => {
-    if (!socket || !userInfo?._id) {
-      console.error("⚠️ No active socket connection or user not authenticated");
-      return;
-    }
+    if (!socket || !userInfo?._id) return;
 
     const receiverId = formData.get("receiverId") as string;
     const message = formData.get("message") as string;
-
-    console.log("📤 Sending Direct Message:", {
-      senderId: userInfo._id,
-      receiverId,
-      message,
-    });
 
     socket.emit("sendDirectMessage", {
       senderId: userInfo._id,
@@ -167,31 +151,19 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       messageType: "text",
     });
 
-    socket.on("sendMessageError", (err) => {
-      console.error("❌ Direct Message Send Error:", err);
-    });
-
-    // ✅ Batch chat-list updates to reduce API calls
     setTimeout(() => {
       queryClient.invalidateQueries({ queryKey: ["chat-list"] });
     }, 200);
   };
 
-  // ✅ Mark Messages as Seen
   const markMessagesAsSeen = (senderId: string) => {
-    if (!socket || !userInfo?._id) {
-      console.error("⚠️ No active socket connection or user not authenticated");
-      return;
-    }
-
-    console.log(`🔍 Marking messages from ${senderId} as seen...`);
+    if (!socket || !userInfo?._id) return;
 
     socket.emit("markMessagesAsSeen", {
       senderId,
       receiverId: userInfo._id,
     });
 
-    // ✅ Reduce unnecessary API calls by delaying invalidation
     setTimeout(() => {
       queryClient.invalidateQueries({
         queryKey: ["direct-messages", senderId],
@@ -200,28 +172,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }, 200);
   };
 
-  // ✅ Send Group Message
   const sendGroupMessage = (groupId: string, message: string) => {
-    if (!socket || !userInfo?._id) {
-      console.error("⚠️ No active socket connection or user not authenticated");
-      return;
-    }
-
-    console.log("📤 Sending Group Message:", {
-      groupId,
-      senderId: userInfo._id,
-      message,
-    });
+    if (!socket || !userInfo?._id) return;
 
     socket.emit("sendGroupMessage", {
       groupId,
       senderId: userInfo._id,
       message,
       messageType: "text",
-    });
-
-    socket.on("sendMessageError", (err) => {
-      console.error("❌ Group Message Send Error:", err);
     });
   };
 
@@ -235,6 +193,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         joinGroup: (groupId) => socket?.emit("joinGroup", groupId),
         leaveGroup: (groupId) => socket?.emit("leaveGroup", groupId),
         markMessagesAsSeen,
+        socketLoading,
       }}
     >
       {children}
