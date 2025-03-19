@@ -1,62 +1,60 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import useChannelWindow from "@/hooks/channels/useChannelWindow";
 import ChannelSheet from "./ChannelSheet";
-import { ChannelMessageType } from "@/routes/channels/types/channel.types";
+import { Avatar } from "@/components/ui/avatar";
+
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
+import ChannelChat from "./ChannelChat";
 
 const GroupChatWindow = () => {
   const {
     isLoading,
     localMessages,
-    userInfo,
     chatEndRef,
     newMessage,
     setNewMessage,
     handleSendMessage,
   } = useChannelWindow();
 
+  const { setTheme, theme } = useTheme();
+
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-white dark:bg-gray-800 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Header - Fixed at Top */}
       <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
-          <h2 className="text-lg font-semibold">Group Chat</h2>
+          <Avatar className="h-10 w-10">
+            <div className="h-full w-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+              GC
+            </div>
+          </Avatar>
+          <div className="flex flex-col">
+            <h2 className="text-lg font-semibold">Group Chat</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {localMessages.length} Messages
+            </p>
+          </div>
         </div>
-        <ChannelSheet />
+        <div className="flex items-center gap-2">
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            {theme === "light" ? <Moon /> : <Sun />}
+          </Button>
+          <ChannelSheet />
+        </div>
       </div>
 
       {/* Messages Scrollable Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {isLoading ? (
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            Loading messages...
-          </p>
-        ) : localMessages.length ? (
-          localMessages.map((msg: ChannelMessageType) => (
-            <div
-              key={msg._id}
-              className={cn(
-                "max-w-[75%] p-3 rounded-lg shadow-md",
-                msg.senderId === userInfo?._id
-                  ? "bg-blue-500 text-white self-end ml-auto"
-                  : "bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
-              )}
-            >
-              <p className="text-sm font-medium">
-                {msg.senderId === userInfo?._id ? "You" : msg.senderName}
-              </p>
-              <p className="text-sm">{msg.message}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            No messages yet.
-          </p>
-        )}
-        <div ref={chatEndRef} />
-      </div>
+      <ChannelChat
+        chatEndRef={chatEndRef}
+        isLoading={isLoading}
+        localMessages={localMessages}
+      />
 
       {/* Message Input */}
       <div className="p-4 border-t dark:border-gray-700 flex items-center gap-3 bg-white dark:bg-gray-800 sticky bottom-0">
@@ -65,10 +63,11 @@ const GroupChatWindow = () => {
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          className="flex-1 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
         />
         <Button
           onClick={handleSendMessage}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-2"
         >
           Send
         </Button>

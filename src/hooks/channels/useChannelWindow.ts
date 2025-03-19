@@ -13,7 +13,6 @@ const useChannelWindow = () => {
   const [newMessage, setNewMessage] = useState("");
   const [localMessages, setLocalMessages] = useState<ChannelMessageType[]>([]);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-  console.log(messages, "localMessages");
   // ✅ Join group on mount & leave on unmount
   useEffect(() => {
     if (groupId) {
