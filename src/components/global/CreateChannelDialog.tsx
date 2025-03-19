@@ -70,6 +70,7 @@ const CreateChannelDialog = ({ fullTitle = true }: { fullTitle?: boolean }) => {
         actionButtonTitle={isPending ? "Creating..." : "Create"}
         onAction={handleSubmit}
         isDisabled={isPending}
+        isSubmitVisible={true}
         size="sm"
       >
         <div className="space-y-4">
