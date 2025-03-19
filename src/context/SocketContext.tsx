@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useUserStore } from "@/services/stores/user/userStore";
 import { queryClient } from "@/services/api/query/queryClient";
+import { BASE_URL_BACKEND } from "@/constant/url";
 
 // Create Context
 type SocketContextType = {
@@ -43,7 +44,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     console.log("🔌 Attempting to connect to WebSocket...");
 
-    const newSocket = io("http://localhost:8000", {
+    const newSocket = io(BASE_URL_BACKEND, {
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 3000,

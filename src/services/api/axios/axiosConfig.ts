@@ -1,8 +1,9 @@
+import { BASE_URL_BACKEND } from "@/constant/url";
 import { useAuthStore } from "@/services/stores/auth/authStore";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/api/"; // Replace with actual API
+const API_BASE_URL = `${BASE_URL_BACKEND}/api/`; // Replace with actual API
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
