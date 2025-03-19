@@ -14,6 +14,7 @@ import ChatWindow from "../components/dashboard/dms/ChatWindow";
 import GroupChatWindow from "../components/dashboard/channel/ChannelChatWindow";
 import GroupPage from "./channels/Index";
 import SettingsPage from "./settings/SettingsPage";
+import BugReportPage from "./bugReport/BugReportPage";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -32,6 +33,7 @@ const AppRouter = () => {
         <Route element={<ProtectedRoutes userInfo={userInfo} />}>
           <Route element={<Layout />}>
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/bug-report" element={<BugReportPage />} />
             <Route path="/" element={<HomePage />}>
               <Route path="dms/:userId" element={<ChatWindow />} />
               <Route path="channel/:groupId" element={<GroupChatWindow />} />

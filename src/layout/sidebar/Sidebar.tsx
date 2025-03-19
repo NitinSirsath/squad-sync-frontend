@@ -6,6 +6,7 @@ import {
   Settings,
   LogOut,
   Plus,
+  Bug,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,6 +47,12 @@ const menuItems = [
     label: "Settings",
     path: "/settings",
     tooltip: "Configure Preferences",
+  },
+  {
+    icon: Bug,
+    label: "Bug Report",
+    path: "/bug-report",
+    tooltip: "Bug Reports",
   },
 ];
 
