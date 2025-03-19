@@ -6,8 +6,6 @@ import UserSheet from "./UserSheet";
 import { useUserProfileById } from "@/hooks/user/useUser.query";
 import { useSocket } from "@/context/SocketContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
 import MessageContainer from "./MessageContainer";
 
 const ChatWindow = () => {
@@ -24,7 +22,6 @@ const ChatWindow = () => {
 
   const { data: userProfile } = useUserProfileById(userId as string);
   const { markMessagesAsSeen, socket } = useSocket();
-  const { setTheme, theme } = useTheme();
 
   // ✅ Mark messages as seen when the chat opens
   useEffect(() => {
@@ -78,13 +75,6 @@ const ChatWindow = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            {theme === "light" ? <Moon /> : <Sun />}
-          </Button>
           <UserSheet userProfile={userProfile} />
         </div>
       </div>
