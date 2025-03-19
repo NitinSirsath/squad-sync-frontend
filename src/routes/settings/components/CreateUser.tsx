@@ -1,5 +1,5 @@
 import { CreateUserType } from "@/services/api/teams/teams.api";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToastStore } from "@/services/stores/toast/useToastStore";
@@ -14,31 +14,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserStore } from "@/services/stores/user/userStore";
 
 const CreateUser = () => {
   const { mutate, isPending: isLoading, error } = useCreateUser();
   const { showToast } = useToastStore();
+  const { userInfo } = useUserStore();
 
-  const userObj = useMemo(
-    () => ({
-      username: "",
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-      role: "employee",
-    }),
-    []
-  );
+  const [formData, setFormData] = useState<CreateUserType>({
+    username: "",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    role: "employee",
+  });
 
-  const [formData, setFormData] = useState<CreateUserType>(userObj);
+  // ✅ Fix: Add `formData` as a dependency
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [e.target.name]: e.target.value,
+    }));
+  }, []);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    },
-    []
-  );
+  // ✅ Fix: Ensure role selection updates state correctly
+  const handleRoleChange = (value: string) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      role: value,
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,13 +61,20 @@ const CreateUser = () => {
       },
       onSuccess: () => {
         showToast("New user created", "success");
-        setFormData(userObj);
+        setFormData({
+          username: "",
+          email: "",
+          password: "",
+          firstName: "",
+          lastName: "",
+          role: "employee",
+        });
       },
     });
   };
 
   return (
-    <Card className=" shadow-lg rounded-lg">
+    <Card className="shadow-lg rounded-lg">
       <CardHeader>
         <CardTitle>Create New User</CardTitle>
       </CardHeader>
@@ -125,12 +138,7 @@ const CreateUser = () => {
           {/* Role Selection with Styled Select */}
           <div>
             <Label>Role</Label>
-            <Select
-              onValueChange={(value) =>
-                setFormData({ ...formData, role: value })
-              }
-              defaultValue={formData.role}
-            >
+            <Select value={formData.role} onValueChange={handleRoleChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Role" />
               </SelectTrigger>
@@ -143,7 +151,11 @@ const CreateUser = () => {
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" disabled={isLoading} className="w-full">
+          <Button
+            type="submit"
+            disabled={isLoading || userInfo?.organizations[0].role !== "admin"}
+            className="w-full"
+          >
             {isLoading ? "Creating..." : "Create User"}
           </Button>
 
