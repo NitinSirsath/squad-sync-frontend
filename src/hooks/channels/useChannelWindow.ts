@@ -1,6 +1,6 @@
 import { useSocket } from "@/context/SocketContext";
 import { useFetchGroupMessages } from "@/routes/channels/hooks/channel.query";
-import { Message } from "@/routes/directMessages/types/message.types";
+import { ChannelMessageType } from "@/routes/channels/types/channel.types";
 import { useUserStore } from "@/services/stores/user/userStore";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -11,9 +11,9 @@ const useChannelWindow = () => {
   const { userInfo } = useUserStore();
   const { data: messages, isLoading } = useFetchGroupMessages(groupId!);
   const [newMessage, setNewMessage] = useState("");
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+  const [localMessages, setLocalMessages] = useState<ChannelMessageType[]>([]);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-
+  console.log(messages, "localMessages");
   // ✅ Join group on mount & leave on unmount
   useEffect(() => {
     if (groupId) {
@@ -37,7 +37,7 @@ const useChannelWindow = () => {
   // ✅ Listen for new messages via WebSocket
   useEffect(() => {
     if (socket && groupId) {
-      const handleNewMessage = (message: Message) => {
+      const handleNewMessage = (message: ChannelMessageType) => {
         console.log("📩 New Group Message Received:", message);
         setLocalMessages((prev) => [...prev, message]);
       };

@@ -1,9 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Message } from "@/routes/directMessages/types/message.types";
 import useChannelWindow from "@/hooks/channels/useChannelWindow";
 import ChannelSheet from "./ChannelSheet";
+import { ChannelMessageType } from "@/routes/channels/types/channel.types";
 
 const GroupChatWindow = () => {
   const {
@@ -34,7 +34,7 @@ const GroupChatWindow = () => {
             Loading messages...
           </p>
         ) : localMessages.length ? (
-          localMessages.map((msg: Message) => (
+          localMessages.map((msg: ChannelMessageType) => (
             <div
               key={msg._id}
               className={cn(
@@ -45,7 +45,7 @@ const GroupChatWindow = () => {
               )}
             >
               <p className="text-sm font-medium">
-                {msg.senderId === userInfo?._id ? "You" : msg.senderId}
+                {msg.senderId === userInfo?._id ? "You" : msg.senderName}
               </p>
               <p className="text-sm">{msg.message}</p>
             </div>

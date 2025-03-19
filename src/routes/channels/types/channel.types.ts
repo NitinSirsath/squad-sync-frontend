@@ -72,3 +72,20 @@ export type updateChanneBodyType = {
   name: string | undefined;
   description: string | undefined;
 };
+
+export interface ChannelMessageType {
+  _id: string;
+  groupId: string;
+  senderId: string;
+  senderName: string;
+  profilePicture: string | null;
+  message: string;
+  messageType: "text"; // Assuming only "text" is possible based on your data
+  fileUrl: string | null;
+  createdAt: string; // ISO 8601 date string
+}
+
+export interface ChannelMessageFullType {
+  page: number;
+  messages: ChannelMessageType[];
+}

@@ -1,5 +1,6 @@
 import {
   AddGroupMember,
+  ChannelMessageType,
   CreateGroupType,
   GroupSendMessageType,
   updateChanneBodyType,
@@ -32,7 +33,9 @@ export const addGroupMember = async (body: AddGroupMember) => {
 
 //group messages apis
 
-export const fetchGroupMessages = async (groupId: string) => {
+export const fetchGroupMessages = async (
+  groupId: string
+): Promise<ChannelMessageType[]> => {
   const response = await axiosInstance.get(
     `/group-messages/${groupId}/group-messages`
   );
