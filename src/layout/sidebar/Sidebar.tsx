@@ -67,7 +67,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="h-screen border bg-gray-900 text-gray-100 flex flex-col items-center p-4 w-20">
+    <aside className="h-screen border bg-gray-950 text-gray-100 flex flex-col items-center p-4 w-20">
       {/* Sidebar Header */}
       <div className="flex items-center justify-center mb-6">
         <Plus className="size-6 cursor-pointer hover:scale-110 transition-transform" />

@@ -16,7 +16,7 @@ const SettingsSidebar = ({
   setActiveTab: (tab: string) => void;
 }) => {
   return (
-    <aside className="w-80 bg-gray-100 dark:bg-gray-900 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
+    <aside className="w-80 bg-gray-100 dark:bg-gray-950 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
       <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
         Settings
       </h2>

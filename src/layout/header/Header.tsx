@@ -10,7 +10,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="h-14 border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center px-6 shadow-sm">
+    <header className="h-14 border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-800 flex items-center px-6 shadow-sm">
       {/* Navigation Controls */}
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>

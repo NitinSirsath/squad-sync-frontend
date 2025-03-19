@@ -54,7 +54,7 @@ const ChatWindow = () => {
   }, [socket, userInfo?._id]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-50 dark:bg-gray-900 shadow-lg rounded-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-50 dark:bg-gray-900 rounded-br-lg rounded-tr-lg shadow-lg ">
       {/* Chat Header */}
       <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center">
         <div className="flex items-center gap-3">
