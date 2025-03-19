@@ -21,7 +21,7 @@ const GroupChatWindow = () => {
   const { setTheme, theme } = useTheme();
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-white dark:bg-gray-800 shadow-md rounded-br-lg rounded-tr-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
       {/* Header - Fixed at Top */}
       <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center gap-3">
         <div className="flex items-center gap-3">

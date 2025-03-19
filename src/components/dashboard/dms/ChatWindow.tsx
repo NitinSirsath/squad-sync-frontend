@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { format } from "date-fns";
-import { Message } from "../../../routes/directMessages/types/message.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import useChatWindow from "../../../routes/directMessages/hooks/useChatWindow";
 import UserSheet from "./UserSheet";
 import { useUserProfileById } from "@/hooks/user/useUser.query";
 import { useSocket } from "@/context/SocketContext";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
+import MessageContainer from "./MessageContainer";
 
 const ChatWindow = () => {
   const {
@@ -23,6 +24,7 @@ const ChatWindow = () => {
 
   const { data: userProfile } = useUserProfileById(userId as string);
   const { markMessagesAsSeen, socket } = useSocket();
+  const { setTheme, theme } = useTheme();
 
   // ✅ Mark messages as seen when the chat opens
   useEffect(() => {
@@ -55,69 +57,44 @@ const ChatWindow = () => {
   }, [socket, userInfo?._id]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-50 dark:bg-gray-900 shadow-lg rounded-lg">
       {/* Chat Header */}
-      <div className="p-4 border-b dark:border-gray-700 flex items-center gap-3">
-        <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          {userProfile?.firstName} {userProfile?.lastName}
-        </h2>
-        <div className="flex flex-1 justify-end">
+      <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={userProfile?.profilePicture || ""} />
+            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              {userProfile?.firstName?.charAt(0)}
+              {userProfile?.lastName?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
+              {userProfile?.firstName} {userProfile?.lastName}
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {localMessages.length} Messages
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            {theme === "light" ? <Moon /> : <Sun />}
+          </Button>
           <UserSheet userProfile={userProfile} />
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-auto p-4 space-y-4">
-        {isLoading ? (
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            Loading messages...
-          </p>
-        ) : localMessages.length ? (
-          localMessages.map((msg: Message) => (
-            <div
-              key={msg._id}
-              className={cn(
-                "flex items-end gap-2",
-                msg.senderId === userInfo?._id ? "justify-end" : "justify-start"
-              )}
-            >
-              {/* Receiver Message (Left) */}
-              {msg.senderId !== userInfo?._id && (
-                <div className="h-10 w-10 bg-gray-400 dark:bg-gray-600 rounded-full"></div>
-              )}
-
-              <div
-                className={cn(
-                  "max-w-[70%] p-3 rounded-lg shadow-md text-sm relative",
-                  msg.senderId === userInfo?._id
-                    ? "bg-blue-500 text-white self-end rounded-br-none"
-                    : "bg-gray-300 dark:bg-gray-700 self-start rounded-bl-none"
-                )}
-              >
-                <p className="font-medium">{msg.senderName}</p>
-                <p>{msg.message}</p>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                  {format(new Date(msg.createdAt), "hh:mm a")}
-                </div>
-                {/* ✅ Show 'Seen' indicator for sent messages */}
-                {msg.senderId === userInfo?._id && msg.seen && (
-                  <div className="text-xs text-green-500 dark:text-green-400 font-medium">
-                    Seen
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            No messages yet.
-          </p>
-        )}
-
-        {/* Auto-scroll reference */}
-        <div ref={chatEndRef} />
-      </div>
+      {/* Messages Container */}
+      <MessageContainer
+        chatEndRef={chatEndRef}
+        isLoading={isLoading}
+        localMessages={localMessages}
+      />
 
       {/* Message Input */}
       <div className="p-4 border-t dark:border-gray-700 flex items-center gap-3 bg-white dark:bg-gray-800">
@@ -126,11 +103,11 @@ const ChatWindow = () => {
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 rounded-lg p-2 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
+          className="flex-1 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500"
         />
         <Button
           onClick={handleSendMessage}
-          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-2 transition-all"
         >
           Send
         </Button>
