@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useInviteUser } from "../hooks/useInvite.query";
 
 interface IProps {
   isDialogOpen: boolean;
@@ -17,14 +18,22 @@ const InviteDialog = ({ setIsDialogOpen, isDialogOpen }: IProps) => {
     email: "",
   });
 
+  const { mutate: inviteUser, isPending: isLoading } = useInviteUser();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsDialogOpen(true);
+    inviteUser(formData, {
+      onSuccess: () => {
+        setIsDialogOpen(false);
+        setFormData({ firstName: "", lastName: "", username: "", email: "" });
+      },
+    });
   };
+
   return (
     <CustomDialog
       open={isDialogOpen}
@@ -102,8 +111,8 @@ const InviteDialog = ({ setIsDialogOpen, isDialogOpen }: IProps) => {
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" className="w-full">
-            Request Invite
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Submitting..." : "Request Invite"}
           </Button>
         </form>
       </div>
