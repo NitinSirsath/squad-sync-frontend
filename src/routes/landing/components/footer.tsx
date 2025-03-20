@@ -80,7 +80,7 @@ const Footer = () => {
           <span className="text-muted-foreground text-center sm:text-start">
             &copy; {new Date().getFullYear()}{" "}
             <a href="/" target="_blank">
-              Shadcn UI Blocks
+              Squad Sync
             </a>
             . All rights reserved.
           </span>
