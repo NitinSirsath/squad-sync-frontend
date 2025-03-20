@@ -32,9 +32,7 @@ const MessageContainer = ({ isLoading, localMessages, chatEndRef }: IProps) => {
               {!isSender && (
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={msg.message || ""} />
-                  <AvatarFallback className="bg-gray-400 dark:bg-gray-600">
-                    {msg.senderName.charAt(0)}
-                  </AvatarFallback>
+                  <AvatarFallback>{msg.senderName.charAt(0)}</AvatarFallback>
                 </Avatar>
               )}
 
