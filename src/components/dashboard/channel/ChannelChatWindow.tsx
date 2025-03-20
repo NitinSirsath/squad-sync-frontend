@@ -16,7 +16,7 @@ const GroupChatWindow = () => {
   } = useChannelWindow();
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 shadow-md rounded-br-lg rounded-tr-lg">
+    <div className="flex flex-col h-[calc(100vh-60px)]  shadow-md rounded-br-lg rounded-tr-lg">
       {/* Header - Fixed at Top */}
       <div className="p-4 border-b dark:border-gray-700 flex justify-between items-center gap-3">
         <div className="flex items-center gap-3">
@@ -45,15 +45,16 @@ const GroupChatWindow = () => {
       />
 
       {/* Message Input */}
-      <div className="p-4 border-t dark:border-gray-700 flex items-center gap-3 bg-white dark:bg-gray-800 sticky bottom-0">
+      <div className="p-4 border-t dark:border-gray-700 flex items-center gap-3  sticky bottom-0">
         <Input
           type="text"
           placeholder="Type a message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
+          className="flex-1 rounded-full border border-gray-300 dark:border-gray-700 "
         />
         <Button
+          disabled={!newMessage}
           onClick={handleSendMessage}
           className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-2"
         >

@@ -12,7 +12,7 @@ const HomeSidebar = () => {
   return (
     <aside
       className={cn(
-        "w-80 flex flex-col p-4 border-r rounded-bl-lg dark:bg-gray-950 rounded-tl-lg"
+        "w-80 flex flex-col p-4 border-r rounded-bl-lg  rounded-tl-lg"
       )}
     >
       <div className="flex items-center gap-3 mb-6">

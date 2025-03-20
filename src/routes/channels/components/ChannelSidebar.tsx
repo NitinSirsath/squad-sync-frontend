@@ -8,7 +8,7 @@ import CreateChannelDialog from "../../../components/global/CreateChannelDialog"
 const ChannelSidebar = () => {
   const { data: groups, isLoading } = useGetGroups();
   return (
-    <aside className="w-80 bg-gray-100 dark:bg-gray-950 flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
+    <aside className="w-80  flex flex-col p-4 border-r rounded-bl-lg rounded-tl-lg dark:border-gray-700">
       <div className="flex flew-row justify-between align-middle">
         <h2 className="text-lg font-semibold mb-4">Channels</h2>
 

@@ -30,8 +30,8 @@ const ChannelSheet = () => {
     <div className="flex gap-2">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Info className="w-4 h-4 mr-2" /> Channel Info
+          <Button variant="secondary" size="sm">
+            <Info /> Channel Info
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-96 p-6">

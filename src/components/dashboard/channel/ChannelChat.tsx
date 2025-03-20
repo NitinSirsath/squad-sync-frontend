@@ -15,7 +15,7 @@ const ChannelChat = ({ isLoading, localMessages, chatEndRef }: IProps) => {
   const { userInfo } = useUserStore();
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-inner">
+    <div className="flex-1 overflow-y-auto p-4 space-y-3  rounded-lg shadow-inner">
       {isLoading ? (
         <p className="text-center text-gray-600 dark:text-gray-400">
           Loading messages...
