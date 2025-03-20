@@ -13,7 +13,7 @@ type SocketContextType = {
   joinGroup: (groupId: string) => void;
   leaveGroup: (groupId: string) => void;
   markMessagesAsSeen: (senderId: string) => void;
-  socketLoading: boolean; // Add loading state
+  socketLoading: boolean;
 };
 
 const SocketContext = createContext<SocketContextType>({
@@ -24,10 +24,9 @@ const SocketContext = createContext<SocketContextType>({
   joinGroup: () => {},
   leaveGroup: () => {},
   markMessagesAsSeen: () => {},
-  socketLoading: true, // Initially loading
+  socketLoading: true,
 });
 
-// ✅ Socket Provider
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
@@ -43,7 +42,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (socket) {
-      console.log("⚠️ Socket already initialized, skipping reconnection.");
+      console.log("✅ Socket already connected, skipping reconnection.");
       return;
     }
 
@@ -59,7 +58,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     newSocket.on("connect", () => {
       console.log("✅ Connected to WebSocket:", newSocket.id);
       newSocket.emit("registerUser", userInfo._id);
-      setSocketLoading(false); // Socket connected
+      setSocketLoading(false);
     });
 
     newSocket.on("connect_error", (err) => {
@@ -69,10 +68,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     newSocket.on("disconnect", (reason) => {
       console.warn("⚠️ WebSocket Disconnected:", reason);
-    });
-
-    newSocket.on("reconnect_attempt", (attempt) => {
-      console.log(`🔄 WebSocket Reconnecting (Attempt ${attempt})...`);
     });
 
     newSocket.on("updateOnlineUsers", (users: string[]) => {
@@ -103,8 +98,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       console.log("🛑 Cleaning up socket connection...");
       newSocket.disconnect();
+      setSocket(null);
     };
-  }, [userInfo?._id]); // ✅ Only runs when userInfo._id changes
+  }, [userInfo?._id]);
 
   useEffect(() => {
     if (!socket) return;
@@ -129,22 +125,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     socket.on("messagesMarkedAsSeen", handleSeenUpdate);
 
     return () => {
-      if (socket) {
-        socket.off("messagesMarkedAsSeen", handleSeenUpdate);
-      }
+      socket.off("messagesMarkedAsSeen", handleSeenUpdate);
     };
   }, [socket, userInfo?._id]);
 
   const sendDirectMessage = (formData: FormData) => {
     if (!socket || !userInfo?._id) return;
 
-    const receiverId = formData.get("receiverId") as string;
-    const message = formData.get("message") as string;
-
     socket.emit("sendDirectMessage", {
       senderId: userInfo._id,
-      receiverId,
-      message,
+      receiverId: formData.get("receiverId") as string,
+      message: formData.get("message") as string,
       messageType: "text",
     });
   };
@@ -194,5 +185,4 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// ✅ Custom Hook
 export const useSocket = () => useContext(SocketContext);
