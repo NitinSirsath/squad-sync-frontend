@@ -4,7 +4,9 @@ import BugTable from "./components/BugTable";
 const BugReportsPage = () => {
   return (
     <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Bug Reports</h1>
+      <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
+        Bug Reports
+      </h2>
       <BugReportForm />
       <BugTable />
     </div>

@@ -22,7 +22,6 @@ import BugUpdateModal from "./BugUpdateModal";
 import { BugReport } from "../types/bugReport.types";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search } from "lucide-react";
 
 const BugTable = () => {
   const { data: bugs, isLoading } = useBugs();
@@ -60,12 +59,11 @@ const BugTable = () => {
   if (isLoading) return <p>Loading bugs...</p>;
 
   return (
-    <div className="p-6 rounded-2xl shadow-lg dark:bg-gray-950 max-h-[90vh] flex flex-col">
+    <div className="p-6 rounded-2xl shadow-lg  max-h-[90vh] flex flex-col">
       {/* Filters & Search Bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         {/* Search Bar */}
         <div className="flex-1 flex items-center">
-          <Search className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
           <Input
             placeholder="Search bugs..."
             value={searchQuery}
