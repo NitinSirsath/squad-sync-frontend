@@ -1,9 +1,9 @@
 import { useUserStore } from "@/services/stores/user/userStore";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Message } from "@/routes/directMessages/types/message.types";
-import { formatDistanceToNowStrict } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Ref } from "react";
+import MessageTimestamp from "@/components/MessageTimestamp";
 
 interface IProps {
   isLoading: boolean;
@@ -52,14 +52,9 @@ const MessageContainer = ({ isLoading, localMessages, chatEndRef }: IProps) => {
                       {msg.senderName}
                     </p>
                   )}
-                  <span className="text-[0.65rem] text-gray-500 dark:text-gray-400">
-                    {formatDistanceToNowStrict(new Date(msg.createdAt), {
-                      addSuffix: true,
-                    })}
-                  </span>
                 </div>
                 <p className="text-sm">{msg.message}</p>
-
+                <MessageTimestamp createdAt={msg.createdAt} />
                 {/* ✅ Show 'Seen' indicator for sent messages */}
                 {isSender && msg.seen && (
                   <div className="text-xs text-green-500 dark:text-green-400 font-medium text-right mt-1">

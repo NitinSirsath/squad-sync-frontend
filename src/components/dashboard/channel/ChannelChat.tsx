@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ChannelMessageType } from "@/routes/channels/types/channel.types";
 import { useUserStore } from "@/services/stores/user/userStore";
-import { formatDistanceToNowStrict } from "date-fns";
 import { Ref } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import MessageTimestamp from "@/components/MessageTimestamp";
 
 interface IProps {
   isLoading: boolean;
@@ -49,11 +49,8 @@ const ChannelChat = ({ isLoading, localMessages, chatEndRef }: IProps) => {
                   </p>
                 )}
                 <p>{msg.message}</p>
-                <span className="text-[0.65rem] text-gray-500 dark:text-gray-400 block mt-1 text-right">
-                  {formatDistanceToNowStrict(new Date(msg.createdAt), {
-                    addSuffix: true,
-                  })}
-                </span>
+
+                <MessageTimestamp createdAt={msg.createdAt} />
               </div>
             </div>
           );
