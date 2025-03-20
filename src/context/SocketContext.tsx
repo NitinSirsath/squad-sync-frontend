@@ -42,6 +42,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
+    if (socket) {
+      console.log("⚠️ Socket already initialized, skipping reconnection.");
+      return;
+    }
+
     console.log("🔌 Attempting to connect to WebSocket...");
 
     const newSocket = io(BASE_URL_BACKEND, {
@@ -59,7 +64,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     newSocket.on("connect_error", (err) => {
       console.error("❌ WebSocket Connection Error:", err.message);
-      setSocketLoading(false); // Connection failed, set loading to false
+      setSocketLoading(false);
     });
 
     newSocket.on("disconnect", (reason) => {
@@ -96,19 +101,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     setSocket(newSocket);
 
     return () => {
-      if (newSocket) {
-        newSocket.off("connect");
-        newSocket.off("connect_error");
-        newSocket.off("disconnect");
-        newSocket.off("reconnect_attempt");
-        newSocket.off("updateOnlineUsers");
-        newSocket.off("updateChatList");
-        newSocket.off("newDirectMessage");
-        newSocket.off("newGroupMessage");
-        newSocket.disconnect();
-      }
+      console.log("🛑 Cleaning up socket connection...");
+      newSocket.disconnect();
     };
-  }, [userInfo?._id]);
+  }, [userInfo?._id]); // ✅ Only runs when userInfo._id changes
 
   useEffect(() => {
     if (!socket) return;
