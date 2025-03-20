@@ -31,7 +31,7 @@ export const useUpdateBug = () => {
     mutationFn: ({ bugId, status }: { bugId: string; status: string }) =>
       updateBug(bugId, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get-all-bugs"] }); // Refresh bug listRefresh bug list
+      queryClient.invalidateQueries({ queryKey: ["get-all-bugs"] }); // ✅ Refresh bug list after update
     },
   });
 };
