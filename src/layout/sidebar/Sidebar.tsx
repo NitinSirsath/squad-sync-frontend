@@ -7,6 +7,7 @@ import {
   LogOut,
   Plus,
   Bug,
+  TreeDeciduousIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,6 +54,12 @@ const menuItems = [
     label: "Bug Report",
     path: "/bug-report",
     tooltip: "Bug Reports",
+  },
+  {
+    icon: TreeDeciduousIcon,
+    label: "Landing page",
+    path: "/landing",
+    tooltip: "New landing page",
   },
 ];
 
