@@ -16,6 +16,7 @@ import GroupPage from "./channels/Index";
 import SettingsPage from "./settings/SettingsPage";
 import BugReportPage from "./bugReport/BugReportPage";
 import LandingPage from "./landing/LandingPage";
+import { useToastStore } from "@/services/stores/toast/useToastStore";
 
 const AppRouter = () => {
   const { userInfo } = useUserStore();
@@ -63,6 +64,7 @@ const AppRouter = () => {
 const PublicRoutes = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { userInfo } = useUserStore();
+  const { showToast } = useToastStore();
   const location = useLocation();
   if (location.pathname === "/landing") {
     return <Outlet />; // Allow rendering of LandingPage
@@ -71,7 +73,7 @@ const PublicRoutes = () => {
   if (isLoggedIn && !userInfo) {
     return null; // Avoid unnecessary redirects while Zustand loads user data
   }
-
+  showToast("User already logged in");
   return isLoggedIn ? (
     <Navigate to="/create-organization" replace />
   ) : (
