@@ -14,56 +14,58 @@ import { CircleCheck, CircleHelp } from "lucide-react";
 import { useState } from "react";
 
 const tooltipContent = {
-  styles: "Choose from a variety of styles to suit your preferences.",
-  filters: "Choose from a variety of filters to enhance your portraits.",
-  credits: "Use these credits to retouch your portraits.",
+  workspaces: "Number of workspaces you can create.",
+  users: "Number of users you can invite to your workspaces.",
+  storage: "Amount of storage space for file sharing.",
+  integrations: "Access to integrations with other tools.",
+  guestAccess: "Ability to invite guests with limited access.",
+  videoCalls: "Duration of video calls allowed.",
 };
 
-const YEARLY_DISCOUNT = 20;
+const YEARLY_DISCOUNT = 15;
 const plans = [
   {
-    name: "Starter",
-    price: 20,
-    description:
-      "Get 20 AI-generated portraits with 2 unique styles and filters.",
+    name: "Basic",
+    price: 10,
+    description: "Ideal for small teams to start collaborating.",
     features: [
-      { title: "5 hours turnaround time" },
-      { title: "20 AI portraits" },
-      { title: "Choice of 2 styles", tooltip: tooltipContent.styles },
-      { title: "Choice of 2 filters", tooltip: tooltipContent.filters },
-      { title: "2 retouch credits", tooltip: tooltipContent.credits },
+      { title: "1 Workspace", tooltip: tooltipContent.workspaces },
+      { title: "10 Users", tooltip: tooltipContent.users },
+      { title: "5 GB Storage", tooltip: tooltipContent.storage },
+      { title: "Basic Integrations", tooltip: tooltipContent.integrations },
+      { title: "Guest Access", tooltip: tooltipContent.guestAccess },
     ],
-    buttonText: "Get 20 portraits in 5 hours",
+    buttonText: "Get Started with Basic",
   },
   {
-    name: "Advanced",
-    price: 40,
+    name: "Standard",
+    price: 25,
     isRecommended: true,
-    description:
-      "Get 50 AI-generated portraits with 5 unique styles and filters.",
+    description: "For growing teams needing advanced collaboration features.",
     features: [
-      { title: "3 hours turnaround time" },
-      { title: "50 AI portraits" },
-      { title: "Choice of 5 styles", tooltip: tooltipContent.styles },
-      { title: "Choice of 5 filters", tooltip: tooltipContent.filters },
-      { title: "5 retouch credits", tooltip: tooltipContent.credits },
+      { title: "5 Workspaces", tooltip: tooltipContent.workspaces },
+      { title: "50 Users", tooltip: tooltipContent.users },
+      { title: "25 GB Storage", tooltip: tooltipContent.storage },
+      { title: "Advanced Integrations", tooltip: tooltipContent.integrations },
+      { title: "Guest Access", tooltip: tooltipContent.guestAccess },
+      { title: "1 Hour Video Calls", tooltip: tooltipContent.videoCalls },
     ],
-    buttonText: "Get 50 portraits in 3 hours",
+    buttonText: "Upgrade to Standard",
     isPopular: true,
   },
   {
     name: "Premium",
-    price: 80,
-    description:
-      "Get 100 AI-generated portraits with 10 unique styles and filters.",
+    price: 50,
+    description: "For large teams requiring full collaboration capabilities.",
     features: [
-      { title: "1-hour turnaround time" },
-      { title: "100 AI portraits" },
-      { title: "Choice of 10 styles", tooltip: tooltipContent.styles },
-      { title: "Choice of 10 filters", tooltip: tooltipContent.filters },
-      { title: "10 retouch credits", tooltip: tooltipContent.credits },
+      { title: "Unlimited Workspaces", tooltip: tooltipContent.workspaces },
+      { title: "Unlimited Users", tooltip: tooltipContent.users },
+      { title: "100 GB Storage", tooltip: tooltipContent.storage },
+      { title: "All Integrations", tooltip: tooltipContent.integrations },
+      { title: "Guest Access", tooltip: tooltipContent.guestAccess },
+      { title: "Unlimited Video Calls", tooltip: tooltipContent.videoCalls },
     ],
-    buttonText: "Get 100 portraits in 1 hour",
+    buttonText: "Unlock Premium Features",
   },
 ];
 

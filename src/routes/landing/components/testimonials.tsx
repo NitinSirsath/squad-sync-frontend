@@ -7,57 +7,57 @@ import Marquee from "@/components/ui/marquee";
 const testimonials = [
   {
     id: 1,
-    name: "John Doe",
-    designation: "Software Engineer",
-    company: "TechCorp",
+    name: "Mitanshu Salvi",
+    designation: "Motion Designer",
+    company: "Source",
     testimonial:
-      "This product has completely transformed the way we work. The efficiency and ease of use are unmatched!",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+      "Squad Sync has been a game-changer for my workflow. Keeping projects organized and communicating with clients is now seamless!",
+    avatar: "https://randomuser.me/api/portraits/men/10.jpg",
   },
   {
     id: 2,
-    name: "Sophia Lee",
-    designation: "Data Analyst",
-    company: "InsightTech",
+    name: "Shantanu Kulkarni",
+    designation: "Freelancer",
+    company: "Self-Employed",
     testimonial:
-      "This tool has saved me hours of work! The analytics and reporting features are incredibly powerful.",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+      "As a freelancer, staying connected with my team is crucial. Squad Sync makes it easy to collaborate and share files efficiently.",
+    avatar: "https://randomuser.me/api/portraits/men/11.jpg",
   },
   {
     id: 3,
-    name: "Michael Johnson",
-    designation: "UX Designer",
-    company: "DesignPro",
+    name: "Pruthvi Shetty",
+    designation: "Software Engineer",
+    company: "Tech Solutions",
     testimonial:
-      "An amazing tool that simplifies complex tasks. Highly recommended for professionals in the industry.",
-    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+      "Squad Sync has significantly improved our team's communication. The ability to create dedicated channels for different projects is incredibly helpful.",
+    avatar: "https://randomuser.me/api/portraits/men/12.jpg",
   },
   {
     id: 4,
-    name: "Emily Davis",
-    designation: "Marketing Specialist",
-    company: "BrandBoost",
+    name: "Soham Tamboli",
+    designation: "Software Engineer",
+    company: "Code Innovators",
     testimonial:
-      "I've seen a significant improvement in our team's productivity since we started using this service.",
-    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
+      "The user interface is intuitive, and the real-time messaging feature has made our daily stand-ups much more efficient. Squad Sync is a must-have!",
+    avatar: "https://randomuser.me/api/portraits/men/13.jpg",
   },
   {
     id: 5,
-    name: "Daniel Martinez",
-    designation: "Full-Stack Developer",
-    company: "CodeCrafters",
+    name: "Sandesh Deore",
+    designation: "Software Engineer",
+    company: "Digital Dynamics",
     testimonial:
-      "The best investment we've made! The support team is also super responsive and helpful.",
-    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+      "I appreciate the seamless file sharing and search functionality. Finding past conversations and documents is now a breeze.",
+    avatar: "https://randomuser.me/api/portraits/men/14.jpg",
   },
   {
     id: 6,
-    name: "Jane Smith",
-    designation: "Product Manager",
-    company: "InnovateX",
+    name: "Rushikesh Gadekar",
+    designation: "Software Engineer",
+    company: "Software Synergy",
     testimonial:
-      "The user experience is top-notch! The interface is clean, intuitive, and easy to navigate.",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+      "Squad Sync has become an essential tool for our team. It's streamlined our communication and made collaboration more efficient than ever.",
+    avatar: "https://randomuser.me/api/portraits/men/15.jpg",
   },
 ];
 
@@ -65,15 +65,15 @@ const Testimonials = () => (
   <div id="testimonials" className="flex justify-center items-center py-20">
     <div className="h-full w-full">
       <h2 className="mb-12 text-4xl md:text-5xl font-bold text-center tracking-tight px-6">
-        Testimonials
+        What Our Users Say About Squad Sync
       </h2>
       <div className="relative">
         <div className="z-10 absolute left-0 inset-y-0 w-[15%] bg-linear-to-r from-background to-transparent" />
         <div className="z-10 absolute right-0 inset-y-0 w-[15%] bg-linear-to-l from-background to-transparent" />
-        <Marquee pauseOnHover className="[--duration:20s]">
+        <Marquee pauseOnHover className="[--duration:60s]">
           <TestimonialList />
         </Marquee>
-        <Marquee pauseOnHover reverse className="mt-0 [--duration:20s]">
+        <Marquee pauseOnHover reverse className="mt-0 [--duration:40s]">
           <TestimonialList />
         </Marquee>
       </div>

@@ -3,6 +3,7 @@ import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -16,7 +17,7 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <ModeToggle />
           <Button variant="outline" className="hidden sm:inline-flex">
-            Sign In
+            <Link to={"/login"}>Sign In</Link>
           </Button>
           <Button className="hidden xs:inline-flex">Get Started</Button>
 

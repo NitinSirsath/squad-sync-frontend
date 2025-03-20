@@ -1,48 +1,48 @@
 import {
-  BadgeDollarSign,
-  Route,
-  ShieldCheck,
-  Truck,
-  Undo2,
-  UserRoundCheck,
+  Users,
+  Lock,
+  MessageSquare,
+  LayoutDashboard,
+  Search,
+  Bell,
 } from "lucide-react";
 
 const faq = [
   {
-    icon: Undo2,
-    question: "What is your return policy?",
+    icon: Users,
+    question: "How do I invite users to my workspace?",
     answer:
-      "You can return unused items in their original packaging within 30 days for a refund or exchange. Contact support for assistance.",
+      "Go to your workspace settings, click on 'Create User', and enter the email addresses of the users you want to invite.",
   },
   {
-    icon: Route,
-    question: "How do I track my order?",
+    icon: Lock,
+    question: "Is my data secure on Squad Sync?",
     answer:
-      "Track your order using the link provided in your confirmation email, or log into your account to view tracking details.",
+      "Yes, we use industry-standard encryption and security practices to protect your data. Your privacy is our top priority.",
   },
   {
-    icon: Truck,
-    question: "Do you ship internationally?",
+    icon: MessageSquare,
+    question: "Can I create different channels within a workspace?",
     answer:
-      "Yes, we ship worldwide. Shipping fees and delivery times vary by location, and customs duties may apply for some countries.",
+      "Absolutely! You can create multiple channels based on different topics or teams to keep your conversations organized.",
   },
   {
-    icon: BadgeDollarSign,
-    question: "What payment methods do you accept?",
+    icon: LayoutDashboard,
+    question: "Is there a mobile app for Squad Sync?",
     answer:
-      "We accept Visa, MasterCard, American Express, PayPal, Apple Pay, and Google Pay, ensuring secure payment options for all customers.",
+      "Currently, Squad Sync is accessible through web browsers. We are working on mobile apps for future releases.",
   },
   {
-    icon: ShieldCheck,
-    question: "What if I receive a damaged item?",
+    icon: Search,
+    question: "How do I search for messages or files?",
     answer:
-      "Please contact our support team within 48 hours of delivery with photos of the damaged item. We’ll arrange a replacement or refund.",
+      "Use the search bar at the top of the interface to quickly find messages, files, and users across your workspaces.",
   },
   {
-    icon: UserRoundCheck,
-    question: "How can I contact customer support?",
+    icon: Bell,
+    question: "How do I manage notifications?",
     answer:
-      "Reach out via email at support@example.com or call us at 1-800-123-4567 for assistance with any inquiries.",
+      "You can customize your notification settings in your profile preferences to control when and how you receive alerts.",
   },
 ];
 
@@ -57,7 +57,7 @@ const FAQ = () => {
           Frequently Asked Questions
         </h2>
         <p className="mt-3 xs:text-lg text-center text-muted-foreground">
-          Quick answers to common questions about our products and services.
+          Quick answers to common questions about Squad Sync.
         </p>
 
         <div className="mt-12 grid md:grid-cols-2 bg-background rounded-xl overflow-hidden outline-[1px] outline-border outline-offset-[-1px]">
